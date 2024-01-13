@@ -2,12 +2,32 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"math/rand"
 	"net/http"
 	"strings"
 )
 
-var urls = make(map[string]string)
+type urlMap struct {
+	ShortenedURL string
+	OriginalURL  string
+	ShortKey     string
+}
+
+var tpl *template.Template
+var urls urlMap
+
+func main() {
+
+	tpl, _ = tpl.ParseGlob("templates/*.html")
+
+	http.HandleFunc("/", handleForm)
+	http.HandleFunc("/shorten", handleShorten)
+	http.HandleFunc("/short/", handleRedirect)
+
+	fmt.Println("URL shortener running on :8080")
+	http.ListenAndServe(":8080", nil)
+}
 
 func handleForm(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -16,27 +36,15 @@ func handleForm(w http.ResponseWriter, r *http.Request) {
 
 	// HTML Form
 	w.Header().Set("Content-Type", "text/html")
-	_, err := fmt.Fprint(w, `
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<title>URL Shortener</title>
-		</head>
-		<body>
-			<h2>URL Shortener</h2>
-			<form method="post" action="/shorten">
-				<input type="url" name="url" placeholder="Enter a URL" required>
-				<input type="submit" value="Shorten">
-			</form>
-		</body>
-		</html>
-	`)
+	err := tpl.ExecuteTemplate(w, "form.html", nil)
+
 	if err != nil {
 		return
 	}
 }
 
 func handleShorten(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -48,35 +56,33 @@ func handleShorten(w http.ResponseWriter, r *http.Request) {
 	}
 
 	shortKey := generateShortKey()
-	urls[shortKey] = originalURL
-
 	shortenedURL := fmt.Sprintf("http://localhost:8080/short/%s", shortKey)
 
+	urls = urlMap{
+		ShortenedURL: shortenedURL,
+		OriginalURL:  originalURL,
+		ShortKey:     shortKey,
+	}
+
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprint(w, `
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<title>URL Shortener</title>
-		</head>
-		<body>
-			<h2>URL Shortener</h2>
-			<p>Original URL: `, originalURL, `</p>
-			<p>Shortened URL: <a href="`, shortenedURL, `">`, shortenedURL, `</a></p>
-		</body>
-		</html>
-	`)
+	err := tpl.ExecuteTemplate(w, "urlShorten.html", urls)
+	if err != nil {
+		return
+	}
 }
 
 func handleRedirect(w http.ResponseWriter, r *http.Request) {
+	var originalURL string
 	shortKey := strings.TrimPrefix(r.URL.Path, "/short/")
+
 	if shortKey == "" {
 		http.Error(w, "Shortened key missing", http.StatusBadRequest)
 		return
 	}
-
-	originalURL, found := urls[shortKey]
-	if !found {
+	if shortKey == urls.ShortKey {
+		originalURL = urls.OriginalURL
+	}
+	if originalURL == "" {
 		http.Error(w, "Shortened key not found", http.StatusNotFound)
 		return
 	}
@@ -92,14 +98,4 @@ func generateShortKey() string {
 		shortKey[i] = charset[rand.Intn(len(charset))]
 	}
 	return string(shortKey)
-}
-
-func main() {
-
-	http.HandleFunc("/", handleForm)
-	http.HandleFunc("/shorten", handleShorten)
-	http.HandleFunc("/short/", handleRedirect)
-
-	fmt.Println("URL shortener running on :8080")
-	http.ListenAndServe(":8080", nil)
 }
