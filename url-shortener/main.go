@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"html/template"
+	"log"
 	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type urlMap struct {
@@ -26,7 +29,15 @@ func main() {
 	http.HandleFunc("/short/", handleRedirect)
 
 	fmt.Println("URL shortener running on :8080")
-	http.ListenAndServe(":8080", nil)
+
+	s := &http.Server{
+		Addr:           ":8000",
+		ReadTimeout:    10 * time.Second, // inactivity
+		WriteTimeout:   10 * time.Second, // inactivity
+		MaxHeaderBytes: 1 << 20,
+	}
+
+	log.Fatal(s.ListenAndServe())
 }
 
 func handleForm(w http.ResponseWriter, r *http.Request) {
