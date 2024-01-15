@@ -2,9 +2,7 @@ package applications
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"html/template"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"url-shortener/utils"
 )
@@ -16,42 +14,30 @@ type urlMap struct {
 }
 
 var urls urlMap
-var tpl *template.Template
 
-func loadRoutes() *chi.Mux {
-	router := chi.NewRouter()
+func loadRoutes() *gin.Engine {
+	router := gin.Default()
+	router.LoadHTMLGlob("templates/*.html")
 
-	router.Use(middleware.Logger)
+	router.GET("/", handleForm)
+	router.POST("/shorten", handleShorten)
+	router.GET("/short/:id", handleRedirect)
 
-	tpl, _ = tpl.ParseGlob("templates/*.html")
-
-	router.Get("/", handleForm)
-	router.Post("/shorten", handleShorten)
-	router.Get("/short/{id}", handleRedirect)
-
-	// walk the routes
-	chi.Walk(router, func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		fmt.Printf("[%s]: '%s' has %d middlewares\n", method, route, len(middlewares))
-		return nil
-	})
+	router.Run()
 
 	return router
 }
 
-func handleForm(w http.ResponseWriter, r *http.Request) {
+func handleForm(c *gin.Context) {
 	// HTML Form
-	w.Header().Set("Content-Type", "text/html")
-	err := tpl.ExecuteTemplate(w, "form.html", nil)
-
-	if err != nil {
-		return
-	}
+	c.Header("Content-Type", "text/html")
+	c.HTML(http.StatusOK, "form.html", nil)
 }
 
-func handleShorten(w http.ResponseWriter, r *http.Request) {
-	originalURL := r.FormValue("url")
+func handleShorten(c *gin.Context) {
+	originalURL := c.PostForm("url")
 	if originalURL == "" {
-		http.Error(w, "URL is missing", http.StatusBadRequest)
+		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
 	shortKey := utils.GenerateShortKey()
@@ -63,19 +49,16 @@ func handleShorten(w http.ResponseWriter, r *http.Request) {
 		ShortKey:     shortKey,
 	}
 
-	w.Header().Set("Content-Type", "text/html")
-	err := tpl.ExecuteTemplate(w, "urlShorten.html", urls)
-	if err != nil {
-		return
-	}
+	c.Header("Content-Type", "text/html")
+	c.HTML(http.StatusOK, "urlShorten.html", urls)
 }
 
-func handleRedirect(w http.ResponseWriter, r *http.Request) {
+func handleRedirect(c *gin.Context) {
 	var originalURL string
-	shortKey := chi.URLParam(r, "id")
+	shortKey := c.Param("id")
 
 	if shortKey == "" {
-		tpl.ExecuteTemplate(w, "error.html", nil)
+		c.HTML(http.StatusUnauthorized, "error.html", nil)
 		return
 	}
 
@@ -84,9 +67,9 @@ func handleRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if originalURL == "" {
-		tpl.ExecuteTemplate(w, "error.html", nil)
+		c.HTML(http.StatusUnauthorized, "error.html", nil)
 		return
 	}
 
-	http.Redirect(w, r, originalURL, http.StatusMovedPermanently)
+	c.Redirect(http.StatusMovedPermanently, originalURL)
 }

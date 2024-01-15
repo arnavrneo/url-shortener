@@ -2,14 +2,20 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"url-shortener/applications"
+	"url-shortener/initializers"
 )
+
+func init() {
+	initializers.LoadEnvVar()
+	initializers.ConnectToDb()
+}
 
 func main() {
 	app := applications.New()
 	err := app.Start(context.TODO())
 	if err != nil {
-		fmt.Errorf("error starting the server: %w", err)
+		log.Fatal("error starting the server")
 	}
 }
