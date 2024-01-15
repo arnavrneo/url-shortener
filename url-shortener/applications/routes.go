@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"url-shortener/middleware"
 	"url-shortener/utils"
 )
 
@@ -23,6 +24,8 @@ func loadRoutes() *gin.Engine {
 	router.POST("/shorten", handleShorten)
 	router.GET("/short/:id", handleRedirect)
 	router.POST("/signup", SignUp)
+	router.POST("/login", Login)
+	router.GET("/validate", middleware.RequireAuth, Validate) // middleware for protecting routes
 
 	router.Run()
 
