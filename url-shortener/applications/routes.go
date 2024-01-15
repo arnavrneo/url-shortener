@@ -22,6 +22,7 @@ func loadRoutes() *gin.Engine {
 	router.GET("/", handleForm)
 	router.POST("/shorten", handleShorten)
 	router.GET("/short/:id", handleRedirect)
+	router.POST("/signup", SignUp)
 
 	router.Run()
 

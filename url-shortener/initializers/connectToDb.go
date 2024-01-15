@@ -24,9 +24,9 @@ func ConnectToDb() {
 		panic("cannot connect to the monogodb cluster.")
 	}
 
-	defer func() {
-		if err = Client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	//defer func() {
+	//	if err = Client.Disconnect(c); err != nil {
+	//		panic(err)
+	//	}
+	//}()
 }
