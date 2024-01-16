@@ -45,7 +45,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// Create the user
-	coll := initializers.Client.Database("user_db").Collection("user_db_urlshortener")
+	coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	newSignUp := models.UserModel{
 		Name:     body.Name,
 		Email:    body.Email,
@@ -94,7 +94,7 @@ func Login(c *gin.Context) {
 	}
 
 	// look up the req user
-	coll := initializers.Client.Database("user_db").Collection("user_db_urlshortener")
+	coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	filter := bson.D{{"email", body.Email}}
 
 	var result models.UserModel
@@ -144,6 +144,7 @@ func Login(c *gin.Context) {
 	//})
 
 	c.Redirect(http.StatusMovedPermanently, "/main")
+	c.Abort() // Aborts the pending handlers
 }
 
 // Validate helper function
