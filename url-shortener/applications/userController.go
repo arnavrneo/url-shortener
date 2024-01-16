@@ -22,7 +22,7 @@ type reqBody struct {
 }
 
 // SignUp the user
-func SignUp(c *gin.Context) {
+func signUp(c *gin.Context) {
 	// Get the email/pass off req body
 	var body reqBody
 
@@ -80,7 +80,7 @@ func SignUp(c *gin.Context) {
 }
 
 // Login logs in the user
-func Login(c *gin.Context) {
+func login(c *gin.Context) {
 	// Get the email and pass off the req body
 	var body reqBody
 
@@ -148,7 +148,7 @@ func Login(c *gin.Context) {
 }
 
 // Validate helper function
-func Validate(c *gin.Context) {
+func validate(c *gin.Context) {
 	user, err := c.Get("user")
 	if err != false {
 		c.JSON(http.StatusUnauthorized, gin.H{
