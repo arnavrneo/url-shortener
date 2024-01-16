@@ -15,15 +15,18 @@ import (
 	"url-shortener/models"
 )
 
+type reqBody struct {
+	Name     string `form:"name" binding:"required"`
+	Email    string `form:"email" binding:"required"`
+	Password string `form:"password" binding:"required"`
+}
+
+// SignUp the user
 func SignUp(c *gin.Context) {
 	// Get the email/pass off req body
-	var body struct {
-		Name     string
-		Email    string
-		Password string
-	}
+	var body reqBody
 
-	if c.Bind(&body) != nil {
+	if c.ShouldBind(&body) != nil {
 		c.JSON(http.StatusBadRequest,
 			gin.H{
 				"error": "failed to read the body",
@@ -48,32 +51,38 @@ func SignUp(c *gin.Context) {
 		Email:    body.Email,
 		Password: string(hash),
 	}
-	result, err := coll.InsertOne(c, newSignUp)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "cannot sign you up",
-		})
-		return
-	}
-	defer func() {
-		if err = initializers.Client.Disconnect(c); err != nil {
-			panic(err)
-		}
-	}()
 
-	// Respond
-	c.JSON(http.StatusOK, gin.H{
-		"success, objectID: ": result.InsertedID,
-	})
+	userExists := checkUser(coll, body) // checks if the username already exists
+	if userExists == false {
+		_, err = coll.InsertOne(c, newSignUp)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "cannot sign you up",
+			})
+			return
+		}
+		defer func() {
+			if err = initializers.Client.Disconnect(c); err != nil {
+				panic(err)
+			}
+		}()
+		// Respond & Redirect
+		//c.JSON(http.StatusOK, gin.H{
+		//	"success, objectID: ": result.InsertedID,
+		//})
+		c.Redirect(http.StatusMovedPermanently, "/")
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "user already exists; choose different username",
+		})
+	}
+
 }
 
+// Login logs in the user
 func Login(c *gin.Context) {
 	// Get the email and pass off the req body
-	var body struct {
-		Name     string
-		Email    string
-		Password string
-	}
+	var body reqBody
 
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest,
@@ -94,7 +103,7 @@ func Login(c *gin.Context) {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			c.JSON(http.StatusBadRequest,
 				gin.H{
-					"error": "invalid email / password",
+					"error": "invalid email / password", //TODO: make it more responsive. If name exists, but password wrong or the user doesn't exists at all
 				})
 			return
 		}
@@ -124,7 +133,7 @@ func Login(c *gin.Context) {
 		})
 	}
 
-	// send it back
+	// SEND IT BACK
 	// as a cookie
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
@@ -133,12 +142,32 @@ func Login(c *gin.Context) {
 	//c.JSON(http.StatusOK, gin.H{
 	//	"token": tokenString,
 	//})
+
+	c.Redirect(http.StatusMovedPermanently, "/main")
 }
 
+// Validate helper function
 func Validate(c *gin.Context) {
-	user, _ := c.Get("user")
-
+	user, err := c.Get("user")
+	if err != false {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "unauthorized",
+		})
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
+}
+
+// checkUser checks whether the user already exists or not
+func checkUser(coll *mongo.Collection, body reqBody) bool {
+	var result models.UserModel
+	filter := bson.D{{"name", body.Name}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return false
+		}
+	}
+	return true
 }

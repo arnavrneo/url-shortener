@@ -8,7 +8,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -31,11 +30,11 @@ func RequireAuth(c *gin.Context) {
 
 		return []byte(os.Getenv("SECRET")), nil
 	})
-	if err != nil {
-		log.Fatal(err)
+	if err != nil { // this err panics the server if cookie is malformed; stops it
+		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		// Check the expiration time
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
@@ -62,5 +61,4 @@ func RequireAuth(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
-
 }

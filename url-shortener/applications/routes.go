@@ -3,6 +3,7 @@ package applications
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"url-shortener/middleware"
 	"url-shortener/utils"
@@ -20,16 +21,30 @@ func loadRoutes() *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 
-	router.GET("/", handleForm)
-	router.POST("/shorten", handleShorten)
-	router.GET("/short/:id", handleRedirect)
-	router.POST("/signup", SignUp)
+	router.GET("/", loginPage)
+	router.GET("/signupUser", signupPage)
 	router.POST("/login", Login)
+	router.POST("/signup", SignUp)
+	router.GET("/main", middleware.RequireAuth, handleForm)
+	router.POST("/shorten", handleShorten) // TODO: protect this and the below path; merge under /main
+	router.GET("/short/:id", handleRedirect)
 	router.GET("/validate", middleware.RequireAuth, Validate) // middleware for protecting routes
 
-	router.Run()
-
+	err := router.Run()
+	if err != nil {
+		log.Fatal("error running the router.")
+	}
 	return router
+}
+
+func loginPage(c *gin.Context) {
+	c.Header("Content-Type", "text/html")
+	c.HTML(http.StatusOK, "login.html", nil)
+}
+
+func signupPage(c *gin.Context) {
+	c.Header("Content-Type", "text/html")
+	c.HTML(http.StatusOK, "signup.html", nil)
 }
 
 func handleForm(c *gin.Context) {

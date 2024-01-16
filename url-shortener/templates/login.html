@@ -1,0 +1,21 @@
+{{template "Header"}}
+<body>
+<form method="POST" action="/login">
+    <label> Username
+        <input type="text" name="name" placeholder="Name">
+    </label><br/><br/>
+    <label> Email
+        <input type="email" name="email" placeholder="Email" required>
+    </label><br/><br/>
+    <label> Password
+        <input type="password" name="password" placeholder="Password" required>
+    </label>
+    <label>
+        <input type="submit" value="Login">
+    </label>
+</form>
+<form action="/signupUser">
+    <input type="submit" value="Signup">
+</form>
+</body>
+{{template "Footer"}}

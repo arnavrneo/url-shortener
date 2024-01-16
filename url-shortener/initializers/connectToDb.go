@@ -10,6 +10,7 @@ import (
 
 var Client *mongo.Client
 
+// ConnectToDb for connecting to MongoDB
 func ConnectToDb() {
 	var err error
 	uri := os.Getenv("MONGODB_URI")

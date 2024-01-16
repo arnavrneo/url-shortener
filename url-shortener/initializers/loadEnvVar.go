@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// LoadEnvVar loads up the environment file
 func LoadEnvVar() {
 	err := godotenv.Load()
 
