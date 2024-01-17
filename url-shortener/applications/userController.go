@@ -16,7 +16,7 @@ import (
 )
 
 type reqBody struct {
-	Name     string `form:"name" binding:"required"`
+	Username string `form:"username" binding:"required"`
 	Email    string `form:"email" binding:"required"`
 	Password string `form:"password" binding:"required"`
 }
@@ -47,7 +47,7 @@ func signUp(c *gin.Context) {
 	// Create the user
 	coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	newSignUp := models.UserModel{
-		Name:     body.Name,
+		Username: body.Username,
 		Email:    body.Email,
 		Password: string(hash),
 	}
@@ -70,7 +70,7 @@ func signUp(c *gin.Context) {
 		//c.JSON(http.StatusOK, gin.H{
 		//	"success, objectID: ": result.InsertedID,
 		//})
-		c.Redirect(http.StatusMovedPermanently, "/")
+		c.Redirect(http.StatusFound, "/")
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "username already exists; choose different username",
@@ -143,8 +143,8 @@ func login(c *gin.Context) {
 	//	"token": tokenString,
 	//})
 
-	c.Redirect(http.StatusMovedPermanently, "/main")
-	c.Abort() // Aborts the pending handlers
+	c.Redirect(http.StatusFound, "/main") // cannot redirect POST to GET route
+	c.Abort()                             // Aborts the pending handlers
 }
 
 // Validate helper function
@@ -163,7 +163,7 @@ func validate(c *gin.Context) {
 // checkUser checks whether the user already exists or not
 func checkUser(coll *mongo.Collection, body reqBody) bool {
 	var result models.UserModel
-	filter := bson.D{{"name", body.Name}}
+	filter := bson.D{{"name", body.Username}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
