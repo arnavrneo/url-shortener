@@ -73,7 +73,7 @@ func signUp(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "user already exists; choose different username",
+			"error": "username already exists; choose different username",
 		})
 	}
 

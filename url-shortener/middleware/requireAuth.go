@@ -41,8 +41,8 @@ func RequireAuth(c *gin.Context) {
 		}
 
 		// Find the user with the token sub
-		coll := initializers.Client.Database("user_db").Collection("user_db_urlshortener")
-		filter := bson.D{{"email", claims["sub"]}}
+		coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
+		filter := bson.D{{"email", claims["sub"]}} // TODO: username or email
 
 		var result models.UserModel
 		err = coll.FindOne(context.TODO(), filter).Decode(&result)

@@ -1,7 +1,6 @@
 package applications
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func New() *App {
 	return app
 }
 
-func (a *App) Start(ctx context.Context) error { // similar to "this" keyword
+func (a *App) Start() error { // similar to "this" keyword
 	server := &http.Server{
 		Addr:    ":8000",
 		Handler: a.router,

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"url-shortener/applications"
 	"url-shortener/initializers"
@@ -14,7 +13,7 @@ func init() {
 
 func main() {
 	app := applications.New()
-	err := app.Start(context.TODO())
+	err := app.Start()
 	if err != nil {
 		log.Fatal("error starting the server")
 	}

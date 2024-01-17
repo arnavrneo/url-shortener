@@ -4,8 +4,17 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"url-shortener/utils"
 )
+
+type urlMap struct {
+	ShortenedURL string
+	OriginalURL  string
+	ShortKey     string
+}
+
+var urls urlMap
 
 func loginPage(c *gin.Context) {
 	c.Header("Content-Type", "text/html")
@@ -18,7 +27,6 @@ func signupPage(c *gin.Context) {
 }
 
 func handleForm(c *gin.Context) {
-	// HTML Form
 	c.Header("Content-Type", "text/html")
 	c.HTML(http.StatusOK, "form.html", nil)
 }
@@ -29,8 +37,8 @@ func handleShorten(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	shortKey := utils.GenerateShortKey()
-	shortenedURL := fmt.Sprintf("http://localhost:8000/short/%s", shortKey)
+	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
+	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Getenv("PORT"), shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
