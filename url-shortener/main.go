@@ -17,7 +17,11 @@ func init() {
 	}
 
 	// connect to db
-	initializers.ConnectToDb(uri)
+	err := initializers.ConnectToDb(uri)
+	if err != nil {
+		panic("cannot connect to the monogodb cluster.")
+	}
+
 }
 
 func main() {

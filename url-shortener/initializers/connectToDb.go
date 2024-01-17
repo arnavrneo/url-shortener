@@ -9,14 +9,12 @@ import (
 var Client *mongo.Client
 
 // ConnectToDb for connecting to MongoDB
-func ConnectToDb(uri string) {
+func ConnectToDb(uri string) error {
 	var err error
 
 	Client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 
-	if err != nil {
-		panic("cannot connect to the monogodb cluster.")
-	}
+	return err
 
 	//defer func() {
 	//	if err = Client.Disconnect(c); err != nil {
