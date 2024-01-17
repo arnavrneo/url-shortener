@@ -85,7 +85,7 @@ func signUp(c *gin.Context) {
 }
 
 // Login logs in the user
-func login(c *gin.Context) {
+func Login(c *gin.Context) {
 	// Get the email and pass off the req body
 	var body reqBody
 

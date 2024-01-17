@@ -4,20 +4,13 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"os"
 )
 
 var Client *mongo.Client
 
 // ConnectToDb for connecting to MongoDB
-func ConnectToDb() {
+func ConnectToDb(uri string) {
 	var err error
-	uri := os.Getenv("MONGODB_URI")
-
-	if uri == "" {
-		log.Fatal("MONGODB_URI not set.")
-	}
 
 	Client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 
