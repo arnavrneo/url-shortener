@@ -14,7 +14,11 @@ func TestLoginPage(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	if err != nil {
-		t.Error("cannot reach login page")
+		t.Errorf("cannot reach login page: %d", w.Code)
+	}
+
+	if w.Code == http.StatusOK {
+		t.Log("status OK")
 	}
 }
 
@@ -26,6 +30,10 @@ func TestSignupPage(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	if err != nil {
-		t.Error("cannot reach login page")
+		t.Errorf("cannot reach login page: %d", w.Code)
+	}
+
+	if w.Code == http.StatusOK {
+		t.Log("status OK")
 	}
 }
