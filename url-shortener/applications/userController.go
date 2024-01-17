@@ -52,12 +52,13 @@ func signUp(c *gin.Context) {
 		Password: string(hash),
 	}
 
-	userExists := checkUser(coll, body) // checks if the username already exists
+	userExists, value := checkUser(coll, body) // checks if the username already exists
+
 	if userExists == false {
 		_, err = coll.InsertOne(c, newSignUp)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "cannot sign you up",
+				"error": "cannot sign you up; bad request",
 			})
 			return
 		}
@@ -71,9 +72,13 @@ func signUp(c *gin.Context) {
 		//	"success, objectID: ": result.InsertedID,
 		//})
 		c.Redirect(http.StatusFound, "/")
-	} else {
+	} else if value == "email" {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "username already exists; choose different username",
+			"error": "email already exists",
+		})
+	} else if value == "username" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "username already exists",
 		})
 	}
 
@@ -87,7 +92,7 @@ func login(c *gin.Context) {
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest,
 			gin.H{
-				"error": "failed to read the body",
+				"error": "failed to read the request",
 			})
 
 		return
@@ -103,7 +108,7 @@ func login(c *gin.Context) {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			c.JSON(http.StatusBadRequest,
 				gin.H{
-					"error": "invalid email / password", //TODO: make it more responsive. If name exists, but password wrong or the user doesn't exists at all
+					"error": "invalid credentials",
 				})
 			return
 		}
@@ -161,14 +166,22 @@ func validate(c *gin.Context) {
 }
 
 // checkUser checks whether the user already exists or not
-func checkUser(coll *mongo.Collection, body reqBody) bool {
+func checkUser(coll *mongo.Collection, body reqBody) (bool, string) {
 	var result models.UserModel
-	filter := bson.D{{"name", body.Username}}
-	err := coll.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return false
+	usernameFilter := bson.D{{"username", body.Username}}
+	emailFilter := bson.D{{"email", body.Email}}
+
+	usernameErr := coll.FindOne(context.TODO(), usernameFilter).Decode(&result) // error will be returned if user is not present
+	emailErr := coll.FindOne(context.TODO(), emailFilter).Decode(&result)
+
+	// username no error exists; email no error duplicate
+	if usernameErr != nil {
+		if emailErr != nil {
+			return false, "" // user doesnt exists
+		} else {
+			return true, "email" // username unique; email exists
 		}
+	} else {
+		return true, "username" // username exists
 	}
-	return true
 }
