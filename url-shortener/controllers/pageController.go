@@ -38,7 +38,7 @@ func handleShorten(c *gin.Context) {
 	}
 
 	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
-	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Args[2], shortKey)
+	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Getenv("PORT"), shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
