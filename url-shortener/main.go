@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
+	"time"
 	"url-shortener/applications"
 	"url-shortener/initializers"
 )
@@ -21,13 +23,22 @@ func init() {
 	if err != nil {
 		panic("cannot connect to the monogodb cluster.")
 	}
-
 }
 
 func main() {
-	app := applications.New()
-	err := app.Start()
+	router := applications.LoadRoutes()
+
+	server := &http.Server{
+		Addr:         ":6457",
+		Handler:      router,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	err := server.ListenAndServe()
 	if err != nil {
-		log.Fatal("error starting the server")
+		log.Fatalf("error starting the server %s", err)
+	} else {
+		log.Println("server running on ")
 	}
 }

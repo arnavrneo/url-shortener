@@ -148,8 +148,8 @@ func Login(c *gin.Context) {
 	//	"token": tokenString,
 	//})
 
-	c.Redirect(http.StatusFound, "/main") // cannot redirect POST to GET route
-	c.Abort()                             // Aborts the pending handlers
+	c.Redirect(http.StatusMovedPermanently, "/main") // cannot redirect POST to GET route
+	c.Abort()                                        // Aborts the pending handlers
 }
 
 // Validate helper function

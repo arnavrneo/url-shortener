@@ -9,7 +9,7 @@ func LoadRoutes() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode) // for production release
 	router := gin.Default()
 
-	router.LoadHTMLGlob("../templates/*") // ../templates/* for testing
+	router.LoadHTMLGlob("templates/*") // ../templates/* for testing
 
 	router.GET("/", loginPage)            // html serving
 	router.GET("/signupUser", signupPage) // html serving
