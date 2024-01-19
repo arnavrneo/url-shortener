@@ -29,7 +29,7 @@ func main() {
 	router := applications.LoadRoutes()
 
 	server := &http.Server{
-		Addr:         ":6457",
+		Addr:         ":" + os.Args[2],
 		Handler:      router,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,

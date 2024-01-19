@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"url-shortener/utils"
 )
 
@@ -37,7 +38,7 @@ func handleShorten(c *gin.Context) {
 	}
 
 	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
-	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", "8000", shortKey)
+	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Args[2], shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
