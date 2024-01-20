@@ -3,7 +3,7 @@ LABEL authors="arnavrneo"
 
 WORKDIR /app
 
-COPY url-shortener/ .
+COPY . .
 
 RUN go get
 RUN go build -o bin .

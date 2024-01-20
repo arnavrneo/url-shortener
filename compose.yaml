@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  go-server-1:
+    build: ./url-shortener
+    ports:
+      - "1233:1233"
+    env_file:
+      - ./url-shortener/.env
+
+  go-server-2:
+    build: ./url-shortener
+    ports:
+      - "1234:1233"
+    env_file:
+      - ./url-shortener/.env
+
+  go-server-3:
+    build: ./url-shortener
+    ports:
+      - "1235:1233"
+    env_file:
+      - ./url-shortener/.env
