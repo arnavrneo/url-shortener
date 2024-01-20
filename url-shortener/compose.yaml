@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  go-server-1:
+    build: .
+    ports:
+      - "1233:1233"
+    env_file:
+      - .env
+#    develop:
+#      watch:
+#        - action: sync
+#          path: ./
+#          target: /app/
+#          ignore:
+#            - tmp/
+#        - action: rebuild
+#          path: go.mod
+
+  go-server-2:
+    build: .
+    ports:
+      - "1234:1233"
+    env_file:
+      - .env
+#    develop:
+#      watch:
+#        - action: sync
+#          path: ./
+#          target: /app/
+#          ignore:
+#            - tmp/
+#        - action: rebuild
+#          path: go.mod
+
+  go-server-3:
+    build: .
+    ports:
+      - "1235:1233"
+    env_file:
+      - .env
+#    develop:
+#      watch:
+#        - action: sync
+#          path: ./
+#          target: /app/
+#          ignore:
+#            - tmp/
+#        - action: rebuild
+#          path: go.mod
