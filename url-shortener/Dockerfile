@@ -1,5 +1,5 @@
 FROM golang:1.21.6
-LABEL authors="neo"
+LABEL authors="arnavrneo"
 
 WORKDIR /app
 
