@@ -1,4 +1,4 @@
 .idea/
-url-shortener/servers/go/.env
-url-shortener/servers/go/.air.toml
-url-shortener/servers/go/tmp
+*.env
+*.air.toml
+*tmp
