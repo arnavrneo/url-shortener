@@ -1,0 +1,4 @@
+.idea
+url-shortener/servers/.env
+url-shortener/servers/.air.toml
+url-shortener/servers/tmp
