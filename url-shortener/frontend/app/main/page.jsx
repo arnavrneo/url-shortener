@@ -1,6 +1,8 @@
 import React from 'react'
 
+
 function Page() {
+
   return (
     <div>
       <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-gray-200 py-10">
@@ -12,7 +14,7 @@ function Page() {
               </div>
               <small className="text-gray-400 mt-4 flex flex-wrap content-center justify-center ">Short your url!</small>
 
-              <form method="post" action="#" className="mt-4">
+              <form className="mt-4">
                 <div className="mb-3">
                   <label className="mb-2 block text-xs font-semibold">Your url  </label>
                   <input type="url" name="url" placeholder="Enter a URL" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" required/>
