@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"url-shortener/controllers"
 	"url-shortener/initializers"
+	"url-shortener/routes"
 )
 
 func init() {
@@ -26,7 +26,7 @@ func init() {
 }
 
 func main() {
-	router := applications.LoadRoutes()
+	router := routes.LoadRoutes()
 
 	server := &http.Server{
 		Addr:         ":" + os.Getenv("PORT"),

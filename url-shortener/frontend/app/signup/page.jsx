@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import {useRouter} from "next/navigation";
 
-function Page() {
+function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -12,8 +12,8 @@ function Page() {
     e.preventDefault();
 
     try {
-      console.log(JSON.stringify({ email, password }))
-      const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/signup', {
+      console.log("Signup credentials: ", JSON.stringify({ email, password }))
+      const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/register', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,7 +24,6 @@ function Page() {
         })
       })
 
-      const data = await response.json()
       if (response.ok) {
         await router.push("/");
       } else {
@@ -94,5 +93,5 @@ function Page() {
   )
 }
 
-export default Page;
+export default Signup;
 

@@ -3,26 +3,26 @@ package applications
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
 	"time"
-	"url-shortener/initializers"
 	"url-shortener/models"
 )
 
 type reqBody struct {
-	Username string `form:"username" binding:"required"`
 	Email    string `form:"email" binding:"required"`
 	Password string `form:"password" binding:"required"`
 }
 
-// SignUp the user
-func signUp(c *gin.Context) {
+// Register the user
+func Register(c *gin.Context) {
 	// Get the email/pass off req body
 	var body reqBody
 
@@ -45,17 +45,25 @@ func signUp(c *gin.Context) {
 	}
 
 	// Create the user
-	coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
+	Client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "cannot connect to the client",
+		})
+	}
+
+	coll := Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	newSignUp := models.UserModel{
-		Username: body.Username,
 		Email:    body.Email,
 		Password: string(hash),
 	}
 
-	userExists, value := checkUser(coll, body) // checks if the username already exists
+	userExists := checkUser(coll, body) // checks if the email already exists
 
 	if userExists == false {
 		_, err = coll.InsertOne(c, newSignUp)
+		fmt.Println(err)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "cannot sign you up; bad request",
@@ -63,25 +71,15 @@ func signUp(c *gin.Context) {
 			return
 		}
 		defer func() {
-			if err = initializers.Client.Disconnect(c); err != nil {
+			if err = Client.Disconnect(c); err != nil {
 				panic(err)
 			}
 		}()
-		// Respond & Redirect
-		//c.JSON(http.StatusOK, gin.H{
-		//	"success, objectID: ": result.InsertedID,
-		//})
-		c.Redirect(http.StatusFound, "/")
-	} else if value == "email" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "email already exists",
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "register request successful",
 		})
-	} else if value == "username" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "username already exists",
-		})
+		//c.Redirect(http.StatusFound, "/") // TODO: now where should the user be redirected and how
 	}
-
 }
 
 // Login logs in the user
@@ -94,19 +92,25 @@ func Login(c *gin.Context) {
 			gin.H{
 				"error": "failed to read the request",
 			})
-
 		return
 	}
 
 	// look up the req user
-	coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
+	Client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "cannot connect to the client",
+		})
+	}
+
+	coll := Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	filter := bson.D{{"email", body.Email}}
 
 	var result models.UserModel
-	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+	err = coll.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			c.JSON(http.StatusBadRequest,
+			c.JSON(http.StatusUnauthorized,
 				gin.H{
 					"error": "invalid credentials",
 				})
@@ -140,48 +144,52 @@ func Login(c *gin.Context) {
 
 	// SEND IT BACK
 	// as a cookie
-	c.SetSameSite(http.SameSiteLaxMode)
+	//c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
 
+	c.JSON(http.StatusOK, gin.H{
+		"message": "login request successful",
+	})
 	// as a jwt token to be stored in the storage session or whatever
 	//c.JSON(http.StatusOK, gin.H{
 	//	"token": tokenString,
 	//})
 
-	c.Redirect(http.StatusMovedPermanently, "/main") // cannot redirect POST to GET route
-	c.Abort()                                        // Aborts the pending handlers
+	//c.Redirect(http.StatusMovedPermanently, "/main") // TODO: check api best practices
 }
 
-// Validate helper function
-func validate(c *gin.Context) {
+// checkUser checks whether the user already exists or not
+func checkUser(coll *mongo.Collection, body reqBody) bool {
+	var result models.UserModel
+	emailFilter := bson.D{{"email", body.Email}}
+
+	emailErr := coll.FindOne(context.TODO(), emailFilter).Decode(&result)
+
+	if emailErr != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+// Logout logs out the user
+func Logout(c *gin.Context) {
+	c.SetCookie("Authorization", "", 0, "", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "successfully logged out",
+	})
+}
+
+// GetUser fetch user detail
+func GetUser(c *gin.Context) {
 	user, err := c.Get("user")
-	if err != false {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "unauthorized",
+	if err == false {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"message": "bad gateway",
 		})
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
-}
-
-// checkUser checks whether the user already exists or not
-func checkUser(coll *mongo.Collection, body reqBody) (bool, string) {
-	var result models.UserModel
-	usernameFilter := bson.D{{"username", body.Username}}
-	emailFilter := bson.D{{"email", body.Email}}
-
-	usernameErr := coll.FindOne(context.TODO(), usernameFilter).Decode(&result) // error will be returned if user is not present
-	emailErr := coll.FindOne(context.TODO(), emailFilter).Decode(&result)
-
-	// username no error exists; email no error duplicate
-	if usernameErr != nil {
-		if emailErr != nil {
-			return false, "" // user doesnt exists
-		} else {
-			return true, "email" // username unique; email exists
-		}
-	} else {
-		return true, "username" // username exists
-	}
 }

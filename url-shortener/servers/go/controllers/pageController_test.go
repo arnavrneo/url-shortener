@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"url-shortener/routes"
 )
 
 func TestLoginPage(t *testing.T) {
-	router := LoadRoutes()
+	router := routes.LoadRoutes()
 
 	w := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", "/", nil)
@@ -23,7 +24,7 @@ func TestLoginPage(t *testing.T) {
 }
 
 func TestSignupPage(t *testing.T) {
-	router := LoadRoutes()
+	router := routes.LoadRoutes()
 
 	w := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", "/signupUser", nil)

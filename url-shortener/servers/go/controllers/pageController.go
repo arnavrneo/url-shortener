@@ -16,22 +16,12 @@ type urlMap struct {
 
 var urls urlMap
 
-func loginPage(c *gin.Context) {
-	c.Header("Content-Type", "text/html")
-	c.HTML(http.StatusOK, "login.html", nil)
-}
-
-func signupPage(c *gin.Context) {
-	c.Header("Content-Type", "text/html")
-	c.HTML(http.StatusOK, "signup.html", nil)
-}
-
-func handleForm(c *gin.Context) {
+func HandleForm(c *gin.Context) {
 	c.Header("Content-Type", "text/html")
 	c.HTML(http.StatusOK, "form.html", nil)
 }
 
-func handleShorten(c *gin.Context) {
+func HandleShorten(c *gin.Context) {
 	originalURL := c.PostForm("url")
 	if originalURL == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -47,10 +37,12 @@ func handleShorten(c *gin.Context) {
 	}
 
 	c.Header("Content-Type", "text/html")
-	c.HTML(http.StatusOK, "urlShorten.html", urls)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "url received",
+	})
 }
 
-func handleRedirect(c *gin.Context) {
+func HandleRedirect(c *gin.Context) {
 	var originalURL string
 	shortKey := c.Param("id")
 

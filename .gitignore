@@ -2,5 +2,5 @@
 *.env
 *.air.toml
 *tmp
-frontend/.next
-frontend/node_modules
+*.next
+*node_modules

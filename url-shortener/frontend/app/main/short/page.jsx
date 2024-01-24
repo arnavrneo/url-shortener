@@ -1,9 +1,32 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
-function Page() {
+function Short() {
+  const [userData, setUserData] = useState('');
+  const [logged, setLogged] = useState(false);
+
+  useEffect(() => {
+    (
+        async () => {
+          const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/user', {
+            credentials: 'include',
+            headers: {"Content-Type": "application/json"},
+          });
+
+          if (response.ok) {
+            const content = await response.json();
+            setUserData(content.message);
+            setLogged(true)
+          } else {
+            setLogged(false)
+          }
+        }
+    )();
+  }, []);
+
   return (
     <div>
-      <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-gray-200 py-10">
+      {logged ? <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-gray-200 py-10">
 
         <div className="flex shadow-md">
 
@@ -33,9 +56,9 @@ function Page() {
         <div className="mt-3 w-full">
           <p className="text-center">frontend for <span className="text-purple-700">url-shortener </span>(in nextjs)</p>
         </div>
-      </div>
+      </div> : ''}
     </div>
   )
 }
 
-export default Page
+export default Short;

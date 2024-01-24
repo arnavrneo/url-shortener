@@ -3,7 +3,7 @@
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 
-export default function Home() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
   const router = useRouter();
@@ -14,16 +14,14 @@ export default function Home() {
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/login', {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        credentials: "include",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
               email,
               password,
             }),
       });
 
-      const data = await response.json();
       if (response.ok) { // response.ok => for 200 http code; not data.ok
         await router.push('/main');
       } else {
