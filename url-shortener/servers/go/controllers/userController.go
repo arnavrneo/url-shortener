@@ -155,7 +155,7 @@ func Login(c *gin.Context) {
 	//	"token": tokenString,
 	//})
 
-	//c.Redirect(http.StatusMovedPermanently, "/main") // TODO: check api best practices
+	//c.Redirect(http.StatusMovedPermanently, "/main")
 }
 
 // checkUser checks whether the user already exists or not

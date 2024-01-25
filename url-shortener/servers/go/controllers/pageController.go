@@ -36,9 +36,8 @@ func HandleShorten(c *gin.Context) {
 		ShortKey:     shortKey,
 	}
 
-	c.Header("Content-Type", "text/html")
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "url received",
+		"shorten_link": urls.ShortenedURL,
 	})
 }
 
