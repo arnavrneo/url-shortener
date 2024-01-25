@@ -1,10 +1,7 @@
-"use client";
-
 import React, {useEffect, useState} from 'react'
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
-import FourOFour from "@/pages/Unauthorized";
 
-function Short({ url }) {
+function Short() {
   const [userData, setUserData] = useState('');
   const [logged, setLogged] = useState(false);
 
@@ -35,12 +32,17 @@ function Short({ url }) {
 
           <div className="flex flex-wrap content-center justify-center rounded-l-md bg-white" style={{ width: "24rem", height: "32rem" }}>
             <div className="w-72">
+              <div className="flex flex-wrap content-center justify-center ">
+                <h1 className="text-xl font-semibold">url-shortener</h1>
+              </div>
+              <small className="text-gray-400 m-10">Enter your url and make it short!</small>
+
               <div className="m-3 flex flex-wrap content-center justify-center">
                 <h3 className="mb-2 block font-semibold">Your short link  </h3>
               </div>
               <div className="mb-3 flex flex-wrap content-center justify-center">
                 <h3 className="mb-2 block font-semibold">
-                    {url}
+                  https://short-link.com
                 </h3>
               </div>
 
@@ -54,7 +56,7 @@ function Short({ url }) {
         <div className="mt-3 w-full">
           <p className="text-center">frontend for <span className="text-purple-700">url-shortener </span>(in nextjs)</p>
         </div>
-      </div> : <FourOFour />}
+      </div> : ''}
     </div>
   )
 }

@@ -28,7 +28,7 @@ func HandleShorten(c *gin.Context) {
 	}
 
 	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
-	shortenedURL := fmt.Sprintf("http://localhost:%s/api/short/%s", os.Getenv("PORT"), shortKey)
+	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Getenv("PORT"), shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
@@ -36,8 +36,9 @@ func HandleShorten(c *gin.Context) {
 		ShortKey:     shortKey,
 	}
 
+	c.Header("Content-Type", "text/html")
 	c.JSON(http.StatusOK, gin.H{
-		"shorten_link": urls.ShortenedURL,
+		"msg": "url received",
 	})
 }
 
@@ -46,21 +47,17 @@ func HandleRedirect(c *gin.Context) {
 	shortKey := c.Param("id")
 
 	if shortKey == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "no short key found",
-		})
-		return
-	}
-
-	if originalURL == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "no short key found",
-		})
+		c.HTML(http.StatusUnauthorized, "error.html", nil)
 		return
 	}
 
 	if shortKey == urls.ShortKey {
 		originalURL = urls.OriginalURL
+	}
+
+	if originalURL == "" {
+		c.HTML(http.StatusUnauthorized, "error.html", nil)
+		return
 	}
 
 	c.Redirect(http.StatusMovedPermanently, originalURL)
