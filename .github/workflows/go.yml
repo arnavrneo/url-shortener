@@ -14,7 +14,10 @@ on:
       
   workflow_dispatch:
 
-
+env:
+  PORT: ${{ secrets.PORT }}
+  REDIS_URI: ${{ secrets.REDIS_URI }}
+  
 jobs:
 
   build:
@@ -42,11 +45,15 @@ jobs:
     #     export MONGODB_URI=${{ secrets.MONGODB_URI }}
     #     export DATABASE_COLLECTION=${{ secrets.DATABASE_COLLECTION }}
     #     export DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+
+    - name: Env Test
+      run: |
+        echo "PRINTING ENV VARS"
+        echo $PORT
+        echo $REDIS_URI
     
     - name: Test
       run: |
-        echo $PORT
-        echo $REDIS_URI
         go test -v ./...
       env:
         PORT: ${{ secrets.PORT }}
