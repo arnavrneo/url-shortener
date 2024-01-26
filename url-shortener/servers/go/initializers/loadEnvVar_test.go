@@ -16,7 +16,7 @@ func TestLoadEnvVar(t *testing.T) {
 
 	for _, j := range vars {
 		if _, ok := os.LookupEnv(j); ok == false {
-			t.Errorf("'%s' not found in the .env", j)
+			t.Errorf("'%s' not found in the env", j)
 		}
 	}
 }
