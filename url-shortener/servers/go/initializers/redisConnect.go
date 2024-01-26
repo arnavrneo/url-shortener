@@ -11,8 +11,8 @@ var Ctx = context.Background()
 
 func ConnectRedis() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("$REDIS_URI"),
-		Password: os.Getenv("$REDIS_PASS"),
+		Addr:     os.Getenv("REDIS_URI"),
+		Password: os.Getenv("REDIS_PASS"),
 		DB:       0,
 	})
 	_, err := rdb.Ping(Ctx).Result()

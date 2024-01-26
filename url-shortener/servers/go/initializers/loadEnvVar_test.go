@@ -7,11 +7,11 @@ import (
 
 func TestLoadEnvVar(t *testing.T) {
 	var vars = []string{
-		"$PORT",
-		"$SECRET",
-		"$DATABASE_NAME",
-		"$DATABASE_COLLECTION",
-		"$MONGODB_URI",
+		"PORT",
+		"SECRET",
+		"DATABASE_NAME",
+		"DATABASE_COLLECTION",
+		"MONGODB_URI",
 	}
 
 	for _, j := range vars {
