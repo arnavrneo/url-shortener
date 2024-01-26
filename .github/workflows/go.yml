@@ -12,6 +12,8 @@ on:
     paths_ignore:
       - 'url-shortener/frontend/'
       
+  workflow_dispatch:
+      
 jobs:
 
   build:
