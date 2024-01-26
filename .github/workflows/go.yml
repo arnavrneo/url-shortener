@@ -5,9 +5,13 @@ name: go-apiv1-test
 on:
   push:
     branches: [ "main" ]
+    paths_ignore:
+      - 'url-shortener/frontend/'
   pull_request:
     branches: [ "main" ]
-
+    paths_ignore:
+      - 'url-shortener/frontend/'
+      
 jobs:
 
   build:
