@@ -43,3 +43,4 @@ jobs:
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         DATABASE_COLLECTION: ${{ secrets.DATABASE_COLLECTION }}
         SECRET: ${{ secrets.SECRET }}
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
