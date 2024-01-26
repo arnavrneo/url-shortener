@@ -13,6 +13,11 @@ on:
       - 'url-shortener/frontend/'
       
   workflow_dispatch:
+
+env:
+  SECRETS: |
+    ${{ secrets.REDIS_URI }}
+    ${{ secrets.REDIS_PASS }}
       
 jobs:
 
