@@ -16,9 +16,10 @@ func ConnectRedis() *redis.Client {
 	})
 	_, err := rdb.Ping(Ctx).Result()
 	if err != nil {
-		fmt.Println("cannot connect redis db")
+		fmt.Println("cannot connect redis client")
+	} else {
+		fmt.Println("REDIS client: OK")
 	}
-	fmt.Println("Redis connected ")
 
 	return rdb
 }

@@ -18,12 +18,12 @@ func LoadRoutes() *gin.Engine {
 		AllowCredentials: true,
 	}))
 
-	router.POST("/api/login", applications.Login)
-	router.POST("/api/logout", applications.Logout)
-	router.POST("/api/register", applications.Register)
-	router.POST("/api/shorten", middleware.RequireAuth, applications.HandleShorten) // TODO: whether to merge this under /main
-	router.GET("/short/:id", applications.HandleRedirect)
-	router.GET("/api/user", middleware.RequireAuth, applications.GetUser)
+	router.POST("/api/login", controllers.Login)
+	router.POST("/api/logout", controllers.Logout)
+	router.POST("/api/register", controllers.Register)
+	router.POST("/api/shorten", middleware.RequireAuth, controllers.HandleShorten) // TODO: whether to merge this under /main
+	router.GET("/short/:id", controllers.HandleRedirect)
+	router.GET("/api/user", middleware.RequireAuth, controllers.GetUser)
 
 	return router
 }
