@@ -14,9 +14,6 @@ on:
       
   workflow_dispatch:
 
-env:
-  PORT: ${{ secrets.PORT }}
-  REDIS_URI: ${{ secrets.REDIS_URI }}
   
 jobs:
 
@@ -35,22 +32,6 @@ jobs:
 
     - name: Set up dependencies
       run: go get .
-
-    # - name: Set env vars
-    #   run: |
-    #     export PORT=${{ secrets.PORT }}
-    #     export REDIS_URI=${{ secrets.REDIS_URI }}
-    #     export REDIS_PASS=${{ secrets.REDIS_PASS }}
-    #     export SECRET=${{ secrets.SECRET }}
-    #     export MONGODB_URI=${{ secrets.MONGODB_URI }}
-    #     export DATABASE_COLLECTION=${{ secrets.DATABASE_COLLECTION }}
-    #     export DATABASE_NAME=${{ secrets.DATABASE_NAME }}
-
-    - name: Env Test
-      run: |
-        echo "PRINTING ENV VARS"
-        echo $PORT
-        echo $REDIS_URI
     
     - name: Test
       run: |
@@ -58,3 +39,7 @@ jobs:
       env:
         PORT: ${{ secrets.PORT }}
         REDIS_URI: ${{ secrets.REDIS_URI }}
+        REDIS_PASS: ${{ secrets.REDIS_PASS }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        DATABASE_COLLECTION: ${{ secrets.DATABASE_COLLECTION }}
+        SECRET: ${{ secrets.SECRET }}
