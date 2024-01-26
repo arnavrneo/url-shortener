@@ -14,9 +14,6 @@ on:
       
   workflow_dispatch:
 
-env:
-  SECRETS: ${{ secrets.REDIS_URI }}, ${{ secrets.REDIS_PASS }}, ${{ secrets.PORT }}, ${{ secrets.SECRET }} }}, ${{ secrets.MONGODB_URI }}, ${{ secrets.DATABASE_NAME }}, ${{ secrets.DATABASE_COLLECTION }}
-    
 jobs:
 
   build:
@@ -35,5 +32,15 @@ jobs:
     - name: Set up dependencies
       run: go get .
 
+    - name: Set env vars
+      run: |
+        export PORT=${{ secrets.PORT }}
+        export REDIS_URI=${{ secrets.REDIS_URI }}
+        export REDIS_PASS=${{ secrets.REDIS_PASS }}
+        export SECRET=${{ secrets.SECRET }}
+        export MONGODB_URI=${{ secrets.MONGODB_URI }}
+        export DATABASE_COLLECTION=${{ secrets.DATABASE_COLLECTION }}
+        export DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+    
     - name: Test
       run: go test -v ./...
