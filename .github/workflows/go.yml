@@ -44,7 +44,10 @@ jobs:
     #     export DATABASE_NAME=${{ secrets.DATABASE_NAME }}
     
     - name: Test
-      run: go test -v ./...
+      run: |
+        echo $PORT
+        echo $REDIS_URI
+        go test -v ./...
       env:
         PORT: ${{ secrets.PORT }}
         REDIS_URI: ${{ secrets.REDIS_URI }}
