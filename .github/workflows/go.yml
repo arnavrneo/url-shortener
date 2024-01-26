@@ -15,10 +15,8 @@ on:
   workflow_dispatch:
 
 env:
-  SECRETS: |
-    ${{ secrets.REDIS_URI }}
-    ${{ secrets.REDIS_PASS }}
-      
+  SECRETS: ${{ secrets.REDIS_URI }}, ${{ secrets.REDIS_PASS }}, ${{ secrets.PORT }}, ${{ secrets.SECRET }} }}, ${{ secrets.MONGODB_URI }}, ${{ secrets.DATABASE_NAME }}, ${{ secrets.DATABASE_COLLECTION }}
+    
 jobs:
 
   build:
