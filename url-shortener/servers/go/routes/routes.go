@@ -22,7 +22,7 @@ func LoadRoutes() *gin.Engine {
 	router.POST("/api/logout", applications.Logout)
 	router.POST("/api/register", applications.Register)
 	router.POST("/api/shorten", middleware.RequireAuth, applications.HandleShorten) // TODO: whether to merge this under /main
-	router.GET("/api/short/:id", applications.HandleRedirect)
+	router.GET("/short/:id", applications.HandleRedirect)
 	router.GET("/api/user", middleware.RequireAuth, applications.GetUser)
 
 	return router

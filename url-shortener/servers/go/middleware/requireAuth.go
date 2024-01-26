@@ -49,7 +49,7 @@ func RequireAuth(c *gin.Context) {
 
 		// Find the user with the token sub
 		coll := Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
-		filter := bson.D{{"email", claims["sub"]}} // TODO: username or email
+		filter := bson.D{{"email", claims["sub"]}}
 
 		var result models.UserModel
 		err = coll.FindOne(context.TODO(), filter).Decode(&result)
@@ -61,7 +61,7 @@ func RequireAuth(c *gin.Context) {
 		}
 
 		// Attach to req
-		c.Set("user", result)
+		c.Set("user", result.Username)
 
 		// Continue
 		c.Next()

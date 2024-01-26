@@ -24,7 +24,7 @@ func HandleShorten(c *gin.Context) {
 	}
 
 	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
-	shortenedURL := fmt.Sprintf("http://localhost:%s/api/short/%s", os.Getenv("PORT"), shortKey)
+	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Getenv("PORT"), shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
@@ -37,11 +37,7 @@ func HandleShorten(c *gin.Context) {
 	// set in the redis
 	err := rdb.Set(initializers.Ctx, urls.ShortKey, urls.OriginalURL, 0).Err()
 	if err != nil {
-		fmt.Printf("error %s", err)
-	}
-
-	if err != nil {
-		panic(err)
+		fmt.Println("cannot set the values in redis")
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -50,19 +46,19 @@ func HandleShorten(c *gin.Context) {
 }
 
 func HandleRedirect(c *gin.Context) {
-	//var originalURL string
+	var originalURL string
 	shortKey := c.Param("id")
 
 	if shortKey == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "bad request",
 		})
 		return
 	}
 
 	rdb := initializers.ConnectRedis()
+	// get the corresponding original url
 	originalURL, err := rdb.Get(initializers.Ctx, urls.ShortKey).Result()
-	fmt.Println("redirect reached ", originalURL)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "shortKey not found",
@@ -70,8 +66,8 @@ func HandleRedirect(c *gin.Context) {
 	}
 
 	if originalURL == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "bad request",
 		})
 		return
 	}

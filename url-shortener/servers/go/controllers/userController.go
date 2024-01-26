@@ -3,7 +3,6 @@ package applications
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,6 +16,7 @@ import (
 )
 
 type reqBody struct {
+	Username string `form:"username" binding:"required"`
 	Email    string `form:"email" binding:"required"`
 	Password string `form:"password" binding:"required"`
 }
@@ -29,7 +29,7 @@ func Register(c *gin.Context) {
 	if c.ShouldBind(&body) != nil {
 		c.JSON(http.StatusBadRequest,
 			gin.H{
-				"error": "failed to read the body",
+				"error": "failed to read the request",
 			})
 
 		return
@@ -55,6 +55,7 @@ func Register(c *gin.Context) {
 
 	coll := Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 	newSignUp := models.UserModel{
+		Username: body.Username,
 		Email:    body.Email,
 		Password: string(hash),
 	}
@@ -63,7 +64,6 @@ func Register(c *gin.Context) {
 
 	if userExists == false {
 		_, err = coll.InsertOne(c, newSignUp)
-		fmt.Println(err)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "cannot sign you up; bad request",
@@ -78,7 +78,6 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "register request successful",
 		})
-		//c.Redirect(http.StatusFound, "/") // TODO: now where should the user be redirected and how
 	}
 }
 
@@ -145,7 +144,14 @@ func Login(c *gin.Context) {
 	// SEND IT BACK
 	// as a cookie
 	//c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
+	c.SetCookie(
+		"Authorization",
+		tokenString,
+		3600,
+		"",
+		"",
+		false,
+		true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "login request successful",
@@ -154,8 +160,6 @@ func Login(c *gin.Context) {
 	//c.JSON(http.StatusOK, gin.H{
 	//	"token": tokenString,
 	//})
-
-	//c.Redirect(http.StatusMovedPermanently, "/main")
 }
 
 // checkUser checks whether the user already exists or not
@@ -174,7 +178,14 @@ func checkUser(coll *mongo.Collection, body reqBody) bool {
 
 // Logout logs out the user
 func Logout(c *gin.Context) {
-	c.SetCookie("Authorization", "", 0, "", "", false, true)
+	c.SetCookie(
+		"Authorization",
+		"",
+		0,
+		"",
+		"",
+		false,
+		true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "successfully logged out",
@@ -185,11 +196,11 @@ func Logout(c *gin.Context) {
 func GetUser(c *gin.Context) {
 	user, err := c.Get("user")
 	if err == false {
-		c.JSON(http.StatusBadGateway, gin.H{
-			"message": "bad gateway",
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "user not found",
 		})
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": user,
+		"username": user,
 	})
 }

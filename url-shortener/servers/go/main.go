@@ -17,9 +17,6 @@ func init() {
 	if uri == "" {
 		log.Fatal("MONGODB_URI not set.")
 	}
-
-	// connect redis
-	initializers.ConnectRedis()
 }
 
 func main() {
