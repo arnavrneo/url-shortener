@@ -6,8 +6,6 @@ import (
 )
 
 func TestLoadEnvVar(t *testing.T) {
-	LoadEnvVar()
-
 	var vars = []string{
 		"PORT",
 		"SECRET",
