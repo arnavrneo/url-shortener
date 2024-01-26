@@ -8,10 +8,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"
 	"os"
 	"time"
-	"url-shortener/initializers"
 	"url-shortener/models"
 )
 
@@ -40,8 +40,15 @@ func RequireAuth(c *gin.Context) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
+		Client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "cannot connect to the client",
+			})
+		}
+
 		// Find the user with the token sub
-		coll := initializers.Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
+		coll := Client.Database(os.Getenv("DATABASE_NAME")).Collection(os.Getenv("DATABASE_COLLECTION"))
 		filter := bson.D{{"email", claims["sub"]}} // TODO: username or email
 
 		var result models.UserModel

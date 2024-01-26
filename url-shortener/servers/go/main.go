@@ -18,11 +18,8 @@ func init() {
 		log.Fatal("MONGODB_URI not set.")
 	}
 
-	// connect to db
-	err := initializers.ConnectToDb(uri)
-	if err != nil {
-		panic("cannot connect to the monogodb cluster.")
-	}
+	// connect redis
+	initializers.ConnectRedis()
 }
 
 func main() {

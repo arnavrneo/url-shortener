@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"url-shortener/initializers"
 	"url-shortener/utils"
 )
 
@@ -16,11 +17,6 @@ type urlMap struct {
 
 var urls urlMap
 
-func HandleForm(c *gin.Context) {
-	c.Header("Content-Type", "text/html")
-	c.HTML(http.StatusOK, "form.html", nil)
-}
-
 func HandleShorten(c *gin.Context) {
 	originalURL := c.PostForm("url")
 	if originalURL == "" {
@@ -28,12 +24,24 @@ func HandleShorten(c *gin.Context) {
 	}
 
 	shortKey := utils.GenerateShortKey() // TODO: check for duplicate keys
-	shortenedURL := fmt.Sprintf("http://localhost:%s/short/%s", os.Getenv("PORT"), shortKey)
+	shortenedURL := fmt.Sprintf("http://localhost:%s/api/short/%s", os.Getenv("PORT"), shortKey)
 
 	urls = urlMap{
 		ShortenedURL: shortenedURL,
 		OriginalURL:  originalURL,
 		ShortKey:     shortKey,
+	}
+
+	rdb := initializers.ConnectRedis()
+
+	// set in the redis
+	err := rdb.Set(initializers.Ctx, urls.ShortKey, urls.OriginalURL, 0).Err()
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+
+	if err != nil {
+		panic(err)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -42,20 +50,29 @@ func HandleShorten(c *gin.Context) {
 }
 
 func HandleRedirect(c *gin.Context) {
-	var originalURL string
+	//var originalURL string
 	shortKey := c.Param("id")
 
 	if shortKey == "" {
-		c.HTML(http.StatusUnauthorized, "error.html", nil)
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
 		return
 	}
 
-	if shortKey == urls.ShortKey {
-		originalURL = urls.OriginalURL
+	rdb := initializers.ConnectRedis()
+	originalURL, err := rdb.Get(initializers.Ctx, urls.ShortKey).Result()
+	fmt.Println("redirect reached ", originalURL)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "shortKey not found",
+		})
 	}
 
 	if originalURL == "" {
-		c.HTML(http.StatusUnauthorized, "error.html", nil)
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
 		return
 	}
 

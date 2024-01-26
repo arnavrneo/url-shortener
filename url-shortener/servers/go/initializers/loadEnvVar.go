@@ -1,6 +1,7 @@
 package initializers
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -12,4 +13,5 @@ func LoadEnvVar() {
 	if err != nil {
 		log.Fatal("cannot load .env file")
 	}
+	fmt.Println(".env loaded")
 }
