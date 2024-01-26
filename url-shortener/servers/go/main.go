@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"url-shortener/controllers"
 	"url-shortener/initializers"
+	"url-shortener/routes"
 )
 
 func init() {
@@ -17,16 +17,10 @@ func init() {
 	if uri == "" {
 		log.Fatal("MONGODB_URI not set.")
 	}
-
-	// connect to db
-	err := initializers.ConnectToDb(uri)
-	if err != nil {
-		panic("cannot connect to the monogodb cluster.")
-	}
 }
 
 func main() {
-	router := applications.LoadRoutes()
+	router := routes.LoadRoutes()
 
 	server := &http.Server{
 		Addr:         ":" + os.Getenv("PORT"),
