@@ -5,7 +5,7 @@ import FourOOne from "@/pages/Unauthorized";
 import {useRouter} from "next/navigation";
 
 function Main() {
-  const [userData, setUserData] = useState('');
+  const [userName, setUserName] = useState('');
   const [logged, setLogged] = useState(false);
   const [url, setUrl] = useState('');
   const [visible, setVisible] = useState(false);
@@ -23,7 +23,7 @@ function Main() {
 
             if (response.ok) {
               const content = await response.json();
-              setUserData(content.message);
+                setUserName(content.username);
               setLogged(true)
             } else {
               setLogged(false)
@@ -33,7 +33,7 @@ function Main() {
   }, []);
 
 
-  const handleSubmit = async (e) => {
+  const handleShorten = async (e) => {
       e.preventDefault();
 
       const formData = new FormData();
@@ -85,11 +85,11 @@ function Main() {
               <div className="flex flex-wrap content-center justify-center ">
                 <h1 className="text-xl font-semibold">url-shortener</h1>
               </div>
-                <small className="text-gray-400 mt-4 flex flex-wrap content-center justify-center ">Welcome {userData.Email}</small>
+                <small className="text-gray-400 mt-4 flex flex-wrap content-center justify-center ">Welcome {userName}</small>
               <small className="text-gray-400 mt-4 flex flex-wrap content-center justify-center ">Short your url!</small>
 
 
-              <form onSubmit={handleSubmit} className="mt-4">
+              <form onSubmit={handleShorten} className="mt-4">
                 <div className="mb-3">
                   <label className="mb-2 block text-xs font-semibold">Your url  </label>
                   <input onChange={(e) => setUrl(e.target.value)} type="url" name="url" placeholder="Enter a URL" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" required/>

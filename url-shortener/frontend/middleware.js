@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 
+// TODO: implement this if everything else works out
 // This function can be marked `async` if using `await` inside
 export async function middleware(request) {
 
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + "/api/auth", {
+        const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + "/auth", {
             method: "POST",
             credentials: "include"
         })

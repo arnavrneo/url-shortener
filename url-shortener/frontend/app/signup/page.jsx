@@ -4,6 +4,7 @@ import React, {useState} from 'react'
 import {useRouter} from "next/navigation";
 
 function Signup() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -19,6 +20,7 @@ function Signup() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          username,
           email,
           password,
         })
@@ -48,8 +50,12 @@ function Signup() {
 
               <form onSubmit={handleSubmit} className="mt-4">
                 <div className="mb-3">
+                  <label className="mb-2 block text-xs font-semibold">Name</label>
+                  <input onChange={(e) => setUsername(e.target.value)} type="username" placeholder="Your name" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" required />
+                </div>
+                <div className="mb-3">
                   <label className="mb-2 block text-xs font-semibold">Email</label>
-                  <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter your email" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" required />
+                  <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Your email" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" required />
                 </div>
 
                 <div className="mb-3">
