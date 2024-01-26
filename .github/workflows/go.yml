@@ -14,8 +14,6 @@ on:
       
   workflow_dispatch:
 
-env:
-  PORT: ${{ secrets.PORT }}
 
 jobs:
 
@@ -47,6 +45,6 @@ jobs:
     
     - name: Test
       run: go test -v ./...
-
-    - name: Environment list
-      run: env
+      env:
+        PORT: ${{ secrets.PORT }}
+        REDIS_URI: ${{ secrets.REDIS_URI }}
