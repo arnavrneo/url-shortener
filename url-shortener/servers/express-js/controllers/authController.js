@@ -1,13 +1,16 @@
 export function register(req, res) {
-    res.status(200).send("<h1>Reached the signup page</h1>")
+    const {username, email, password } = req.body;
+    console.log(username, email, password);
+    res.status(200).send("new signup")
 }
 
 export function login(req, res) {
-    res.status(200).send("<h1>Reached the login page</h1>")
+    const { username, email, password } = req.body;
+    res.status(200).send("new login reached")
 }
 
 export function logout(req, res) {
-    res.status(200).send("<h1>Reached the logout page</h1>")
+    res.status(200).send("logout successful.")
 }
 
 export function shorten(req, res) {
