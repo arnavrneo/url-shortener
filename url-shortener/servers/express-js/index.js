@@ -1,6 +1,13 @@
 import express from 'express';
 import './loadEnv.js';
-import email from './routes/email.js';
+// import email from './routes/email.js';
+import register from "./routes/register.js";
+import login from "./routes/login.js";
+import logout from "./routes/logout.js";
+import shorten from "./routes/shorten.js";
+import user from "./routes/user.js";
+import short from "./routes/short.js";
+
 
 const PORT = process.env.PORT;
 const app = express();
@@ -8,7 +15,14 @@ const app = express();
 app.use(express.json());
 
 // load the routes
-app.use("/email", email);
+// app.use("/email", email);
+// TODO: convert the api to /api/*
+app.use("/signup", register);
+app.use("/login", login);
+app.use("/logout", logout);
+app.use("/shorten", shorten);
+app.use("/short", short)
+app.use("/user", user);
 
 // global error handling
 app.use((err, _req, res, next) => {
