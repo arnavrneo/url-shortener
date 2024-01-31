@@ -1,25 +1,29 @@
-// import { MongoClient } from "mongodb";
-//
-// const connectionString = process.env.MONGODB_URI || "";
-// const client = new MongoClient(connectionString);
-//
-// let conn;
-// try {
-//     conn = await client.connect();
-// } catch (e) {
-//     console.log(e);
-// }
-//
-// let db = conn.db(process.env.DATABASE_NAME);
-// export default db;
-
-import mongoose from "mongoose";
+import mongoose, {model, Schema} from "mongoose";
+import User from "../routes/user.js";
 
 const connectionString = process.env.MONGODB_URI || "";
 mongoose.Promise = global.Promise;
 try {
-    mongoose.connect("mongodb+srv://arnav:urlshortener@cluster0.8hlrx0u.mongodb.net/?retryWrites=true&w=majority");
+    mongoose.connect(process.env.MONGODB_URI);
     console.log("connected successfully");
+
+    const schema = new Schema({
+        username: String,
+        email: String,
+        password: String,
+    })
+    const user = model('User', schema);
+
+    const userDetail = new user({
+        username: "a",
+        email: "b",
+        password: "c",
+    })
+
+    await userDetail.save();
+
+    const find = await user.findOne({});
+    console.log(find);
 } catch (e) {
     console.log(e);
 }
