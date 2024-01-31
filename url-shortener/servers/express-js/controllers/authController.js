@@ -1,7 +1,16 @@
-export function register(req, res) {
+import User from "../models/User.js";
+
+export async function register(req, res) {
     const {username, email, password } = req.body;
     console.log(username, email, password);
-    res.status(200).send("new signup")
+
+    try {
+        const user = await User.create({ username, email, password }); // async func call
+        res.status(201).json(user);
+    } catch (e) {
+        console.log(e);
+        res.status(400).send("error, user cannot be created.")
+    }
 }
 
 export function login(req, res) {

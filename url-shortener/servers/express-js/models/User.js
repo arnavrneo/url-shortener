@@ -1,17 +1,23 @@
-// TODO: do we need this if we are using mongodb client not the mongoose
-// TODO: check if should shift to mongoose
-// export const userSchema = {
-//     username: {
-//         type: String,
-//         required: true,
-//     },
-//     email: {
-//         type: String,
-//         required: true,
-//         unique: true,
-//     },
-//     password: {
-//         type: String,
-//         required: true
-//     }
-// }
+import {mongoose} from "mongoose";
+
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true
+    },
+    password: {
+        type: String,
+        required: true,
+
+    }
+})
+
+const User = mongoose.model("url_short_express_backend", userSchema);
+
+export default User;
