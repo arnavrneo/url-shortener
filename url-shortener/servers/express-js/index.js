@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
-    .then((result) => app.listen(process.env.PORT))
+    .then((result) => app.listen(PORT))
     .catch((err) => console.log(err));
 
 // load the routes

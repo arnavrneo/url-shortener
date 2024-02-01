@@ -1,15 +1,34 @@
 import User from "../models/User.js";
 
+const handleErrors = (err) => {
+    console.log(err.message, err.code);
+    let errors = { username: '', email: '', password: ''};
+
+    // duplicate error code
+    if (err.code === 11000) {
+        errors.email = 'that email is already registered';
+        return errors;
+    }
+
+    // validation errors
+    if (err.message.includes('url_short_express_backend validation failed:')) {
+        Object.values(err.errors).forEach(({properties}) => {
+            errors[properties.path] = properties.message;
+        });
+    }
+
+    return errors;
+}
+
 export async function register(req, res) {
     const {username, email, password } = req.body;
-    console.log(username, email, password);
 
     try {
         const user = await User.create({ username, email, password }); // async func call
         res.status(201).json(user);
     } catch (e) {
-        console.log(e);
-        res.status(400).send("error, user cannot be created.")
+        const errors = handleErrors(e);
+        res.status(400).json({ errors });
     }
 }
 
