@@ -8,12 +8,14 @@ import shorten from "./routes/shorten.js";
 import user from "./routes/user.js";
 import short from "./routes/short.js";
 import {mongoose} from "mongoose";
+import cookieParser from "cookie-parser";
 
 
 const PORT = process.env.PORT;
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 mongoose.connect(process.env.MONGODB_URI)
     .then((result) => app.listen(PORT))

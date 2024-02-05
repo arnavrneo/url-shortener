@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const handleErrors = (err) => {
     console.log(err.message, err.code);
@@ -34,7 +35,19 @@ export async function register(req, res) {
 
 export function login(req, res) {
     const { username, email, password } = req.body;
-    res.status(200).send("new login reached")
+
+    const token = createToken(email)
+
+    // using lib
+    res.cookie('jwt', token, {
+        maxAge: maxAge * 1000, // in milliseconds
+        //secure: true, // only over https
+        httpOnly: true // cant access it from frontend
+    });
+
+    // way to set cookie
+    //res.setHeader('Set-Cookie', 'newUser=true');
+    res.status(201).json({ 'message': 'login successful'})
 }
 
 export function logout(req, res) {
@@ -54,3 +67,11 @@ export function getUser(req, res) {
     res.status(200).send("<h1>Fetch the user data from here</h1>")
 }
 
+const maxAge = 60 * 60 // in seconds
+const createToken = (email) => {
+    return jwt.sign(
+        { email },
+        process.env.SECRET,
+        { expiresIn: maxAge })
+
+}
