@@ -5,6 +5,16 @@ const handleErrors = (err) => {
     console.log(err.message, err.code);
     let errors = { username: '', email: '', password: ''};
 
+    // incorrect email
+    if (err.message === 'incorrect email') {
+        errors.email = 'the email is not registered';
+    }
+
+    // incorrect password
+    if (err.message === 'incorrect password') {
+        errors.password = 'the password is incorrect';
+    }
+
     // duplicate error code
     if (err.code === 11000) {
         errors.email = 'that email is already registered';
@@ -26,28 +36,44 @@ export async function register(req, res) {
 
     try {
         const user = await User.create({ username, email, password }); // async func call
-        res.status(201).json(user);
+        const token = createToken(user.email)
+
+        // using lib
+        res.cookie('jwt', token, {
+            maxAge: maxAge * 1000, // in milliseconds
+            //secure: true, // only over https
+            httpOnly: true // cant access it from frontend
+        });
+        res.status(201).json({'message': 'register successful'});
+
     } catch (e) {
         const errors = handleErrors(e);
         res.status(400).json({ errors });
     }
 }
 
-export function login(req, res) {
+export async function login(req, res) {
     const { username, email, password } = req.body;
 
-    const token = createToken(email)
+    try {
+        const user = await User.login(username, email, password);
+        const token = createToken(user.email)
 
-    // using lib
-    res.cookie('jwt', token, {
-        maxAge: maxAge * 1000, // in milliseconds
-        //secure: true, // only over https
-        httpOnly: true // cant access it from frontend
-    });
+        // using lib
+        res.cookie('jwt', token, {
+            maxAge: maxAge * 1000, // in milliseconds
+            //secure: true, // only over https
+            httpOnly: true // cant access it from frontend
+        });
+        res.status(200).json({'error': 'login successful'});
+    } catch (err) {
+        const errors = handleErrors(err)
+        res.status(400).json({ errors });
+    }
 
     // way to set cookie
     //res.setHeader('Set-Cookie', 'newUser=true');
-    res.status(201).json({ 'message': 'login successful'})
+    //res.status(201).json({ 'message': 'login successful'})
 }
 
 export function logout(req, res) {
