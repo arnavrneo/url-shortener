@@ -10,12 +10,15 @@ import short from "./routes/short.js";
 import {mongoose} from "mongoose";
 import cookieParser from "cookie-parser";
 import requireAuth from "./middleware/authMiddleware.js";
-
+import cors from 'cors';
 
 const PORT = process.env.PORT;
 const app = express();
 
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3000/signup", "http://localhost:3000/main"]
+
 app.use(express.json());
+app.use(cors({allowedOrigins, credentials: true, origin: true}));
 app.use(cookieParser());
 
 mongoose.connect(process.env.MONGODB_URI)
@@ -23,7 +26,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch((err) => console.log(err));
 
 // load the routes
-app.use("/api/signup", register);
+app.use("/api/register", register);
 app.use("/api/login", login);
 app.use("/api/logout", logout);
 app.use("/api/shorten", requireAuth , shorten);

@@ -90,8 +90,9 @@ export function shortRedirect(req, res) {
     res.status(200).send(`<h1>Redirect from here. Got id: ${param}</h1>`)
 }
 
-export function getUser(req, res) {
-    res.status(200).send("<h1>Fetch the user data from here</h1>")
+export async function getUser(req, res) {
+    // const user = await User.findOne({ email: req.email })
+    res.status(200).json({ username: "arnav", email: "a@a.com" })
 }
 
 const maxAge = 60 * 60 // in seconds
