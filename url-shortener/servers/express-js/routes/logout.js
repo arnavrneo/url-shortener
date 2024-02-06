@@ -3,6 +3,6 @@ import {logout} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.get("/", logout);
+router.post("/", logout);
 
 export default router;

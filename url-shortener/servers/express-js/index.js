@@ -9,6 +9,7 @@ import user from "./routes/user.js";
 import short from "./routes/short.js";
 import {mongoose} from "mongoose";
 import cookieParser from "cookie-parser";
+import requireAuth from "./middleware/authMiddleware.js";
 
 
 const PORT = process.env.PORT;
@@ -22,18 +23,16 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch((err) => console.log(err));
 
 // load the routes
-// app.use("/email", email);
-// TODO: convert the api to /api/*
-app.use("/signup", register);
-app.use("/login", login);
-app.use("/logout", logout);
-app.use("/shorten", shorten);
-app.use("/short", short)
-app.use("/user", user);
+app.use("/api/signup", register);
+app.use("/api/login", login);
+app.use("/api/logout", logout);
+app.use("/api/shorten", requireAuth , shorten);
+app.use("/api/short", short)
+app.use("/api/user", requireAuth, user);
 
 // global error handling
 app.use((err, _req, res, next) => {
-    res.status(500).send("Error occured");
+    res.status(500).send("Error occurred");
 })
 
 // app.listen(PORT, () => {

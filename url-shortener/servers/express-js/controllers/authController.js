@@ -65,7 +65,7 @@ export async function login(req, res) {
             //secure: true, // only over https
             httpOnly: true // cant access it from frontend
         });
-        res.status(200).json({'error': 'login successful'});
+        res.status(200).json({"message": "login request successful",});
     } catch (err) {
         const errors = handleErrors(err)
         res.status(400).json({ errors });
@@ -77,7 +77,8 @@ export async function login(req, res) {
 }
 
 export function logout(req, res) {
-    res.status(200).send("logout successful.")
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).send({"message": "successfully logged out",})
 }
 
 export function shorten(req, res) {

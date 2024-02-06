@@ -23,7 +23,7 @@ function Main() {
 
             if (response.ok) {
               const content = await response.json();
-                setUserName(content.username);
+              setUserName(content.username);
               setLogged(true)
             } else {
               setLogged(false)
