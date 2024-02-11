@@ -91,8 +91,8 @@ export function shortRedirect(req, res) {
 }
 
 export async function getUser(req, res) {
-    // const user = await User.findOne({ email: req.email })
-    res.status(200).json({ username: "arnav", email: "a@a.com" })
+    // console.log("EMAIL: ", res.locals.user);
+    res.status(200).json({ username: res.locals.user.username, email: res.locals.user.email });
 }
 
 const maxAge = 60 * 60 // in seconds

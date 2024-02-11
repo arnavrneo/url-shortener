@@ -25,14 +25,15 @@ export const checkUser = async (req, res, next) => {
     if (token) {
         jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
             if (err) {
+                res.locals.user = null;
                 next();
             } else {
-                console.log(decodedToken)
-                // let user = await User.findById(decodedToken.email);
+                res.locals.user = await User.findOne({email: decodedToken.email});
                 next();
             }
         })
     } else {
-
+        res.locals.user = null;
+        next();
     }
 }

@@ -9,7 +9,7 @@ import user from "./routes/user.js";
 import short from "./routes/short.js";
 import {mongoose} from "mongoose";
 import cookieParser from "cookie-parser";
-import requireAuth from "./middleware/authMiddleware.js";
+import requireAuth, {checkUser} from "./middleware/authMiddleware.js";
 import cors from 'cors';
 
 const PORT = process.env.PORT;
@@ -26,6 +26,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch((err) => console.log(err));
 
 // load the routes
+app.get("*", checkUser);
 app.use("/api/register", register);
 app.use("/api/login", login);
 app.use("/api/logout", logout);
