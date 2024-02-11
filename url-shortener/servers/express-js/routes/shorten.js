@@ -3,6 +3,6 @@ import {shorten} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.get("/", shorten);
+router.post("/", shorten);
 
 export default router;

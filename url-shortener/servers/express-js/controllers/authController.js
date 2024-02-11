@@ -81,7 +81,31 @@ export function logout(req, res) {
     res.status(200).send({"message": "successfully logged out",})
 }
 
+// func GenerateShortKey() string {
+//     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+//     const keyLength = 6
+//
+//     shortKey := make([]byte, keyLength)
+//     for i := range shortKey {
+//         shortKey[i] = charset[rand.Intn(len(charset))]
+//     }
+//     return string(shortKey)
+// }
+
+function generateShortkey() {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const keyLength = 6;
+
+    const shortKey = []
+    for (let i=0; i<keyLength; i++) {
+        shortKey.push(charset[Math.floor(Math.random() * charset.length)]);
+    }
+
+    return shortKey
+}
+
 export function shorten(req, res) {
+    const shortKey = generateShortkey();
     res.status(200).send("<h1>Reached the shorten page</h1>")
 }
 
