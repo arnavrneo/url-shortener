@@ -34,10 +34,6 @@ app.use("/api/shorten", requireAuth , shorten);
 app.use("/api/short", short)
 app.use("/api/user", requireAuth, user);
 
-// global error handling
-app.use((err, _req, res, next) => {
-    res.status(500).send("Error occurred");
-})
 
 // app.listen(PORT, () => {
 //     console.log(`Server listening on port: ${PORT}`);
