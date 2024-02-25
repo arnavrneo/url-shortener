@@ -5,7 +5,7 @@ const client = createClient({
     socket: {
         host: 'redis-15391.c326.us-east-1-3.ec2.cloud.redislabs.com',
         port: 15391,
-        tls: true,
+        tls: {rejectUnauthorized: false},
     }
 });
 
