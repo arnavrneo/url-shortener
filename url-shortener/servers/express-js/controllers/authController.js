@@ -81,15 +81,6 @@ export function logout(req, res) {
     res.cookie('jwt', '', { maxAge: 1 });
     res.status(200).send({"message": "successfully logged out",})
 }
-.idea/
-*.env
-*.air.toml
-*tmp
-*.next
-*node_modules
-*package-lock.json
-*frontend
-*go
 function generateShortkey() {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const keyLength = 6;
