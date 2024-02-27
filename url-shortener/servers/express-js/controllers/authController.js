@@ -95,6 +95,7 @@ function generateShortkey() {
 
 export async function shorten(req, res) {
     const originalUrl = req.body.url;
+    console.log(originalUrl)
     const shortKey = generateShortkey();
     const setData = await client.SET(shortKey, originalUrl, (err, reply) => {
         if (err) {
@@ -109,6 +110,7 @@ export async function shorten(req, res) {
 
 export async function shortRedirect(req, res) {
     const shortKey = req.params.id;
+    console.log(shortKey)
     const getData = await client.GET(shortKey, (err, reply) => {
         if (err) {
             console.log('Cannot fetch the string: ', err);
