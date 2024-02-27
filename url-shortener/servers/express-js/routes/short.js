@@ -3,6 +3,6 @@ import {shortRedirect} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.use("/:id", shortRedirect);
+router.get("/:id", shortRedirect);
 
 export default router;
