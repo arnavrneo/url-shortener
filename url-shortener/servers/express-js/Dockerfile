@@ -1,5 +1,4 @@
-# TODO: error building; possible: node version
-FROM node:21-alpine
+FROM node:18
 LABEL authors="arnavrneo"
 
 WORKDIR /app
@@ -7,6 +6,8 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install
+
+COPY . .
 
 EXPOSE 5678
 
