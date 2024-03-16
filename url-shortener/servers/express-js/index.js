@@ -16,9 +16,17 @@ const PORT = process.env.PORT;
 const app = express();
 
 const allowedOrigins = ["http://localhost:3000", "http://localhost:3000/signup", "http://localhost:3000/main"]
+//const allowedOrigins = ["*"]
 
 app.use(express.json());
-app.use(cors({allowedOrigins, credentials: true, origin: true}));
+app.use(cors({origin: allowedOrigins, credentials: true})); //This one kills the server after cors error
+// app.use(function(req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     next();
+// });
 app.use(cookieParser());
 
 mongoose.connect(process.env.MONGODB_URI)
