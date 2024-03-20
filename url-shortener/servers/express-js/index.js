@@ -1,6 +1,5 @@
 import express from 'express';
 import './loadEnv.js';
-// import email from './routes/email.js';
 import register from "./routes/register.js";
 import login from "./routes/login.js";
 import logout from "./routes/logout.js";
