@@ -1,0 +1,27 @@
+services:
+  go:
+    image: 4b33b091a935
+#    build:
+#      context: go/
+#      dockerfile: Dockerfile
+    ports:
+      - "1234:1234"
+
+  express:
+    image: feb890d9439b
+#    build:
+#      context: express-js/
+#      dockerfile: Dockerfile
+    ports:
+      - "5678:5678"
+
+  proxy:
+    build:
+      context: proxy/
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on: # helps in making nginx find the host address
+      - go
+
+
