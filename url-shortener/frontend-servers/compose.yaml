@@ -1,7 +1,6 @@
 services:
   frontend:
     image: d12758100786
-    container_name: frontend1
 #    build:
 #      context: ../frontend/
 #      dockerfile: Dockerfile
@@ -10,7 +9,7 @@ services:
 
   go-backend:
     image: 4b33b091a935
-    container_name: go
+    container_name: go # for referencing inside the other containers
 #    build:
 #      context: ../servers/go/
 #      dockerfile: Dockerfile
@@ -21,7 +20,7 @@ services:
 
   express-backend:
     image: feb890d9439b
-    container_name: express1
+    container_name: express
 #    build:
 #      context: ../servers/express-js/
 #      dockerfile: Dockerfile
@@ -37,5 +36,5 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - go-backend
+      - go-backend # cant use container name here
       - express-backend
