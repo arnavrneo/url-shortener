@@ -1,0 +1,21 @@
+---
+- name: Getting the required files
+  block:
+    - name: Copying the script
+      copy:
+        src: get_files.sh
+        dest: "{{ script_dest }}" 
+      register: copy_output
+      when: docker_input == "1"
+
+    - name: Running the script
+      script: "{{ script_dest }}get_files.sh {{ github_token }}"
+      register: script_result
+      when: docker_input == "1"
+
+- name: Debug Output 
+  debug:
+    var: 
+      - copy_output
+      - script_result
+...
