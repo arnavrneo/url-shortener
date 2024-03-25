@@ -1,7 +1,7 @@
 ---
 - name: Copying the required files
-  import_tasks: setup_files.yml
+  ansible.builtin.import_tasks: setup_files.yml
 
 - name: Running Docker Compose
-  import_tasks: docker_compose.yml
+  ansible.builtin.import_tasks: docker_compose.yml
 ...

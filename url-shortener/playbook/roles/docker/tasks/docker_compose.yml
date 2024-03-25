@@ -1,22 +1,18 @@
 ---
-- name: Install docker-compose python package
-  ansible.builtin.pip:
-    name: docker-compose
-
 - name: Docker Compose for Frontend + Backend
-  docker_compose:
-    #project_name: frontend_+_backend
+  community.docker.docker_compose:
+    # project_name: frontend_+_backend
     project_src: url-shortener/url-shortener/frontend-servers/
   when: docker_input == "2"
   register: output
 
 - name: Docker compose remove containers
-  docker_compose:
+  community.docker.docker_compose:
     project_src: url-shortener/url-shortener/frontend-servers/
     state: absent
   when: docker_input == "3"
 
 - name: Docker Compose Status
-  debug:
+  ansible.builtin.debug:
     var: output # its something else here
 ...

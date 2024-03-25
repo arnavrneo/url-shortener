@@ -2,20 +2,26 @@
 - name: Getting the required files
   block:
     - name: Copying the script
-      copy:
+      ansible.builtin.copy:
         src: get_files.sh
-        dest: "{{ script_dest }}" 
+        dest: "{{ docker_script_dest }}"
+        mode: '0644'
       register: copy_output
       when: docker_input == "1"
 
     - name: Running the script
-      script: "{{ script_dest }}get_files.sh {{ github_token }}"
+      ansible.builtin.script: "{{ docker_script_dest }}get_files.sh {{ docker_github_token }}"
       register: script_result
       when: docker_input == "1"
 
-- name: Debug Output 
-  debug:
-    var: 
+    - name: Install docker-compose python package
+      ansible.builtin.pip:
+        name: docker-compose
+      when: docker_input == "1"
+
+- name: Debug Output
+  ansible.builtin.debug:
+    var:
       - copy_output
       - script_result
 ...
