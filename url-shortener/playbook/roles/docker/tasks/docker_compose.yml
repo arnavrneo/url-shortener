@@ -1,0 +1,18 @@
+---
+- name: Docker Compose for Frontend + Backend
+  community.docker.docker_compose:
+    # project_name: frontend_+_backend
+    project_src: url-shortener/url-shortener/frontend-servers/
+  when: docker_input == "2"
+  register: output
+
+- name: Docker compose remove containers
+  community.docker.docker_compose:
+    project_src: url-shortener/url-shortener/frontend-servers/
+    state: absent
+  when: docker_input == "3"
+
+- name: Docker Compose Status
+  ansible.builtin.debug:
+    var: output # its something else here
+...
