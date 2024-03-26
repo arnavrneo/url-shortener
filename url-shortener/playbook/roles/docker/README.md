@@ -15,7 +15,7 @@ To change the directory on the remote servers where script should be copied, edi
 
 Configure Hosts
 ----------------
-<Will show how to use AWS>
+<Will show connection to AWS EC2>
 
     - hosts: servers
       roles:
