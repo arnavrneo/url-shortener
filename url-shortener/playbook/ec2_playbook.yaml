@@ -1,0 +1,45 @@
+---
+-
+  hosts: localhost
+  connection: local 
+  gather_facts: false
+
+  tasks:
+    - name: Create a SG for SSH & HTTP access
+      amazon.aws.ec2_security_group:
+        name: ansible
+        description: Ansible SG
+        region: us-east-1
+        vpc_id: vpc-0353f47c70b42ca4d
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0 
+          - proto: tcp 
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+    - name: Provision an instance
+      amazon.aws.ec2_instance:
+        key_name: ansible
+        instance_type: t2.micro
+        image_id: ami-0c101f26f147fa7fd
+        region: us-east-1
+        wait: true
+        exact_count: 1 
+        tags:
+          Ansible: AnsibleNginxWebServers
+      register: ec2 
+
+    - name: Add all instance public IPs to host group
+      ansible.builtin.add_host:
+        hostname: "{{ item.public_ip_address }}"
+        groups: ansiblehosts
+      with_items: "{{ ec2.instances }}"
+
+    - name: Show group
+      debug:
+        var: groups.ansiblehosts
+...
