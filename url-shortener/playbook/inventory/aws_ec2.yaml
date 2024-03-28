@@ -1,0 +1,16 @@
+---
+plugin: amazon.aws.aws_ec2
+aws_profile: ec2man
+
+hostnames:
+  - ip-address
+
+regions: 
+  - us-east-1
+
+#keyed_groups:
+#   - prefix: arch
+#    key: architecture
+groups:
+  ubuntu: "'ubuntu' in tags.OS"
+...

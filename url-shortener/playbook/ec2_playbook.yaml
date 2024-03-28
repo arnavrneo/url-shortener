@@ -7,10 +7,11 @@
   tasks:
     - name: Create a SG for SSH & HTTP access
       amazon.aws.ec2_security_group:
+        profile: ec2man # make a prompt
         name: ansible
         description: Ansible SG
-        region: us-east-1
-        vpc_id: vpc-0353f47c70b42ca4d
+        region: us-east-1 # make a prompt
+        vpc_id: vpc-031a4e8389dec4a3e # make a prompt
         rules:
           - proto: tcp
             from_port: 80
@@ -23,12 +24,13 @@
 
     - name: Provision an instance
       amazon.aws.ec2_instance:
+        profile: ec2man
         key_name: ansible
-        instance_type: t2.micro
-        image_id: ami-0c101f26f147fa7fd
+        instance_type: t2.micro # prompt
+        image_id: ami-080e1f13689e07408 # prompt
         region: us-east-1
         wait: true
-        exact_count: 1 
+        exact_count: 2
         tags:
           Ansible: AnsibleNginxWebServers
       register: ec2 
