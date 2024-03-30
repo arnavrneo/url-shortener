@@ -1,6 +1,6 @@
 ---
 plugin: amazon.aws.aws_ec2
-aws_profile: ec2man
+aws_profile: test-ec2
 
 hostnames:
   - ip-address
@@ -12,5 +12,5 @@ regions:
 #   - prefix: arch
 #    key: architecture
 groups:
-  ubuntu: "'ubuntu' in tags.OS"
+  ansible: "'AnsibleNginxWebServer' in tags.Ansible"
 ...
