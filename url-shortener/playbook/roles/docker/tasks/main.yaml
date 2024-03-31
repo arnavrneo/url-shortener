@@ -1,0 +1,10 @@
+---
+- name: Copying the required files
+  ansible.builtin.import_tasks: setup_files.yaml
+
+- name: Running Docker Compose
+  ansible.builtin.import_tasks: docker_compose.yaml
+
+- name: Copying env files
+  ansible.builtin.import_tasks: copy_env.yaml
+...

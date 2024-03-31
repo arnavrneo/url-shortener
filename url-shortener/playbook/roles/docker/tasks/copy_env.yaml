@@ -1,0 +1,35 @@
+--- 
+- name: Copying .env's
+  block:
+    - name: Copying frontend .env
+      ansible.builtin.copy:
+        src: frontend/.env
+        dest: url-shortener/url-shortener/frontend/
+        mode: '0644'
+      register: frontend_copy
+      when: docker_input == "4"
+
+    - name: Copying go server .env
+      ansible.builtin.copy:
+        src: go/.env
+        dest: url-shortener/url-shortener/servers/go/
+        mode: '0644'
+      register: go_copy
+      when: docker_input == "4"
+
+    - name: Copying express js .env
+      ansible.builtin.copy:
+        src: express_js/.env
+        dest: url-shortener/url-shortener/servers/express-js
+        mode: '0644'
+      register: express_copy
+      when: docker_input == "4"
+  
+- name: Debug Output
+  ansible.builtin.debug:
+    var:
+      - frontend_copy
+      - go_copy
+      - express_copy
+    
+...

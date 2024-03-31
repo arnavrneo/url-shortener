@@ -1,16 +1,8 @@
----
-plugin: amazon.aws.aws_ec2
-aws_profile: test-ec2
-
+plugin: aws_ec2
+profile: test-ec2
 hostnames:
   - ip-address
-
 regions: 
   - us-east-1
-
-#keyed_groups:
-#   - prefix: arch
-#    key: architecture
 groups:
-  ansible: "'AnsibleNginxWebServer' in tags.Ansible"
-...
+  ansible: "'urlShortenerServer' in tags.Ansible"

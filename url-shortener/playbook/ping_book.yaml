@@ -1,6 +1,0 @@
-- name: Pinging dynamic ec2 IPs
-  hosts: ubuntu
-
-  tasks:
-    - name: Ping 
-      ping:

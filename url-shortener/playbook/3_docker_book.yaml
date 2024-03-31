@@ -1,0 +1,16 @@
+---
+- 
+  name: Setting up and running docker compose
+  hosts: ansible
+  #connection: local 
+  become: yes
+  #become_user: root
+
+  vars_prompt:
+    - name: docker_input
+      prompt: "1) Setup Files\n2) Compose up\n3) Compose rm\n4) Copy .env files"
+      private: False
+
+  roles:
+    - docker
+...
