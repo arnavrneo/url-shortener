@@ -6,7 +6,8 @@ Role for setting up the files and the containers.
 Requirements
 ------------
 
-No extra requirements other than the `ansible` itself installed.
+- Ansible installed.
+- If `.env` has to be used, create three dirs: `frontend`, `go` and `express_js` and then copy the respective `.env` under them. 
 
 Role Variables
 --------------
