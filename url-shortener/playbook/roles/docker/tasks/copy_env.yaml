@@ -1,4 +1,4 @@
---- 
+---
 - name: Copying .env's
   block:
     - name: Copying frontend .env
@@ -24,12 +24,11 @@
         mode: '0644'
       register: express_copy
       when: docker_input == "4"
-  
+
 - name: Debug Output
   ansible.builtin.debug:
     var:
       - frontend_copy
       - go_copy
       - express_copy
-    
 ...
