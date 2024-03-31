@@ -1,0 +1,79 @@
+---
+- 
+  name: Create EC2 instances
+  hosts: localhost_group
+  connection: local 
+  gather_facts: false
+
+  # vars:
+  #   region: us-east-1
+  #   image: ami-080e1f13689e07408
+  #   instance_type: t2.micro
+  #   sec_group: "sg-0cb1234c398b2a4fe"
+
+  vars_prompt:
+    - name: aws_profile 
+      prompt: "Enter aws profile: "
+      private: False
+
+    - name: region
+      prompt: "Enter region: "
+      private: False
+      default: us-east-1
+    
+    - name: image
+      prompt: "Enter ami-id: "
+      private: False
+      default: ami-080e1f13689e07408
+
+    - name: instance_type
+      prompt: "Enter instance type: "
+      private: False
+      default: t2.micro
+
+    - name: sec_group
+      prompt: "Enter security group id: "
+      private: False
+      #default: "sg-0cb1234c398b2a4fe"
+    
+  tasks:
+    - name: Create SG
+      amazon.aws.ec2_security_group:
+       name: "{{ sec_group }}"
+       description: "Test sg"
+       region: "{{ region }}"
+       aws_profile: "{{ aws_profile }}"
+       #aws_profile: test-ec2
+      #aws_access_key: "{{ ec2_access_key }}"
+      #aws_secret_key: "{{ ec2_secret_key }}"
+       rules:
+         - proto: tcp
+           ports:
+             - 22
+           cidr_ip: 0.0.0.0/0
+           rule_desc: allow_ssh
+
+         - proto: tcp
+           ports:
+              - 3000
+           cidr_ip: 0.0.0.0/0
+           rule_desc: frontend-exposed
+   
+  
+    - name: Create an instance
+      amazon.aws.ec2_instance:
+        key_name: ansible
+        aws_profile: "{{ aws_profile }}"
+        #aws_profile: test-ec2
+        instance_type: "{{ instance_type }}"
+        region: "{{ region }}"
+        image_id: "{{ image }}"
+        security_group: "{{ sec_group }}"
+        network:
+           assign_public_ip: true
+        wait: true
+        exact_count: 1
+        tags:
+          Ansible: urlShortenerServer
+
+...

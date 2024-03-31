@@ -14,6 +14,16 @@
       register: script_result
       when: docker_input == "1"
 
+    - name: Install pip
+      ansible.builtin.command: sudo apt-get install python3-pip -y
+      when: docker_input == "1"
+      changed_when: false
+
+    - name: Install docker python
+      ansible.builtin.command: pip install docker==6.1.3 # only this works
+      when: docker_input == "1"
+      changed_when: false
+
     - name: Install docker-compose python package
       ansible.builtin.pip:
         name: docker-compose

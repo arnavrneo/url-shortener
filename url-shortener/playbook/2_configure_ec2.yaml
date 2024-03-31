@@ -1,0 +1,38 @@
+---
+
+- name: Configure EC2 instance
+  hosts: ansible
+  connection: ssh
+  become: true
+
+  tasks:
+    - name: Update the machine
+      command: sudo apt-get clean && update -y
+    
+    - name: Installing essentials
+      command: apt-get install apt-transport-https ca-certificates curl software-properties-common -y
+      
+    - name: Installing Curl
+      command: apt-get install curl -y
+  
+    - name: Pre-steps
+      command: "{{ item }}"
+      with_items:
+        - curl -fsSL https://get.docker.com -o get-docker.sh
+        - sudo sh get-docker.sh
+
+    - name: Adding user to group
+      command: sudo usermod -aG docker ${USER}
+
+    - name: Restarting docker service
+      command: sudo service docker restart 
+
+    - name: Updating the machine 2
+      command: sudo apt-get update
+
+    - name: Installing Python Pip
+      command: sudo apt-get install python-pip -y
+
+    - name: Installing Docker compose
+      command: sudo apt-get install docker-compose-plugin
+...
