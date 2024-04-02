@@ -14,7 +14,7 @@ import cors from 'cors';
 const PORT = process.env.PORT;
 const app = express();
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:3000/signup", "http://localhost:3000/main"]
+const allowedOrigins = [process.env.ORIGIN]
 //const allowedOrigins = ["*"]
 
 app.use(express.json());
