@@ -1,0 +1,23 @@
+# .github/workflows/ansible-lint.yml
+name: ansible-lint
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  
+jobs:
+  build:
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ansible Lint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip install ansible-lint
+
+      - name: Linting the ansible role
+        working-directory: url-shortener/playbook/roles/docker
+        run: ansible-lint -p . --exclude=tests/

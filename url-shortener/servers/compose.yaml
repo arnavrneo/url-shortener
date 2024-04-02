@@ -23,5 +23,3 @@ services:
       - "8080:80"
     depends_on: # helps in making nginx find the host address
       - go
-
-
