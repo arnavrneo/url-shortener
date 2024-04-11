@@ -1,68 +1,84 @@
 ---
-- 
+-
   name: Create EC2 instances
-  hosts: localhost_group
-  connection: local 
+  hosts: localhost
+  become: true
+  connection: local
   gather_facts: false
 
   vars_prompt:
-    - name: aws_profile 
+    - name: aws_profile
       prompt: "Enter aws profile: "
-      private: False
+      private: false
 
     - name: region
       prompt: "Enter region: "
-      private: False
+      private: false
       default: us-east-1
-    
-    - name: image
-      prompt: "Enter ami-id: "
-      private: False
-      default: ami-080e1f13689e07408
-
-    - name: instance_type
-      prompt: "Enter instance type: "
-      private: False
-      default: t2.micro
 
     - name: sec_group
       prompt: "Enter security group id: "
-      private: False
-      #default: "sg-012wxxxxx"
-    
-  tasks:
-    - name: Create SG
-      amazon.aws.ec2_security_group:
-       name: "{{ sec_group }}"
-       description: "Test sg"
-       region: "{{ region }}"
-       aws_profile: "{{ aws_profile }}"
-       rules:
-         - proto: tcp
-           ports:
-             - 22
-           cidr_ip: 0.0.0.0/0
-           rule_desc: allow_ssh
+      private: false
+      # default: "sg-012wxxxxx"
 
-         - proto: tcp
-           ports:
+    - name: sg_desc
+      prompt: "Desc about Security Group: "
+      private: false
+      default: Custom Security Group
+
+    - name: image
+      prompt: "Enter ami-id: "
+      private: false
+      default: ami-080e1f13689e07408 # ubuntu
+
+    - name: instance_type
+      prompt: "Enter instance type: "
+      private: false
+      default: t2.micro
+
+    - name: key_name
+      prompt: "Enter key name: "
+      private: false
+      default: ansible
+
+    - name: count
+      prompt: "Enter count of instances: "
+      private: false
+      default: 1
+
+
+  tasks:
+    - name: Create Security Group
+      amazon.aws.ec2_security_group:
+        name: "{{ sec_group }}"
+        description: "{{ sg_desc }}"
+        region: "{{ region }}"
+        aws_profile: "{{ aws_profile }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow_ssh
+
+          - proto: tcp
+            ports:
               - 3000
-           cidr_ip: 0.0.0.0/0
-           rule_desc: frontend-exposed
-   
-  
+            cidr_ip: 0.0.0.0/0
+            rule_desc: frontend-exposed
+
     - name: Create an instance
       amazon.aws.ec2_instance:
-        key_name: ansible
+        key_name: "{{ key_name }}"
         aws_profile: "{{ aws_profile }}"
         instance_type: "{{ instance_type }}"
         region: "{{ region }}"
         image_id: "{{ image }}"
         security_group: "{{ sec_group }}"
         network:
-           assign_public_ip: true
+          assign_public_ip: true
         wait: true
-        exact_count: 1
+        exact_count: "{{ count }}"
         tags:
           Ansible: urlShortenerServer
 
