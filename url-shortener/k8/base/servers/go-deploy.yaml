@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tier: backend
+    app: goserver
+  name: goserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+      app: goserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: goserver
+        tier: backend
+    spec:
+      containers:
+        - image: goserver:1.0
+          name: goserver
+          ports:
+            - name: http
+              containerPort: 1234
+          resources: {}
+status: {}
+...
