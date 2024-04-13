@@ -20,11 +20,38 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: goserver:1.0
+        - image: arnavneo/goserver:1.0
           name: goserver
           ports:
             - name: http
               containerPort: 1234
+          env:
+            - name: MONGODB_URI
+              value: x
+
+            - name: REDIS_URI
+              value: x
+
+            - name: REDIS_PASS
+              value: x
+
+            - name: DATABASE_NAME
+              value: x
+
+            - name: DATABASE_COLLECTION
+              value: x
+
+            - name: PORT
+              value: '1234'
+
+            - name: SECRET
+              value: x
+
+            - name: ORIGINS
+              value: http://localhost:3000
+#          envFrom:
+#            - secretRef:
+#                name: goenv2
           resources: {}
 status: {}
 ...
