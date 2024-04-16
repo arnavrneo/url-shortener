@@ -23,7 +23,7 @@ spec:
         - image: arnavneo/goserver:1.0
           name: goserver
           ports:
-            - name: http
+            - name: http-go
               containerPort: 1234
           env:
             - name: PORT
