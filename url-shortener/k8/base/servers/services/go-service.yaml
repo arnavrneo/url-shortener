@@ -10,5 +10,5 @@ spec:
     - protocol: TCP
       port: 1234
       targetPort: 1234
-  type: NodePort
+  type: ClusterIP
   

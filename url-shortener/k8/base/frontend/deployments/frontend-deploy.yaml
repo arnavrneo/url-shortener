@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: nextjs
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+      tier: frontend
+  template:
+    metadata:
+      name: frontend
+      labels:
+        app: nextjs
+        tier: frontend
+    spec:
+      containers:
+        - name: nextjs-frontend
+          image: arnavneo/frontend:1.0
+          ports:
+            - name: http-frontend
+              containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_BACKEND_URL
+              value: http://go-service:1234/api
+      restartPolicy: Always
+      

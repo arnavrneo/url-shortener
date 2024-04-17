@@ -53,6 +53,4 @@ spec:
           envFrom:
             - secretRef:
                 name: goenv
-          resources: {}
-status: {}
 ...
