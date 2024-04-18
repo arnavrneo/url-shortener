@@ -25,10 +25,10 @@ Let's choose expressjs as our backend server (goserver under dev).
 
 ### backend setup
 
-6) Edit the `ejs-secret.yaml`, add the specified secret values in base64 format. For `ORIGINS` field,
+7) Edit the `ejs-secret.yaml`, add the specified secret values in base64 format. For `ORIGINS` field,
    use the `base64` value of `frontend service` ip (without `/`) and for `NGINX_ENDPOINT`, use the value of `nginx service` ip (without `/`) in `base64` format and
    then create the secret.
-7) Create the `ejs-deploy.yaml` (edit the `REDIS_PORT` env value according to your redis db port.)
+8) Create the `ejs-deploy.yaml` (edit the `REDIS_PORT` env value according to your redis db port.)
 
 The frontend can be accessed and nginx reverse proxies the requests to the backend. The k8 cluster is now configured.
 
