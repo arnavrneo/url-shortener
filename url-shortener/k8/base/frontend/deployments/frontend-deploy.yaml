@@ -27,6 +27,6 @@ spec:
               containerPort: 3000
           env:
             - name: NEXT_PUBLIC_BACKEND_URL
-              value: http://192.168.58.2:30840/api
+              value: http://192.168.49.2:32034/api
       restartPolicy: Always
 ...
