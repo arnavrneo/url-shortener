@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/login', {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/login', {
         method: "POST",
         credentials: "include",
         headers: {"Content-Type": "application/json"},

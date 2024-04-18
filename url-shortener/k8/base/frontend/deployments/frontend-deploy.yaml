@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy
+  labels:
+    app: nextjs
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+      tier: frontend
+  template:
+    metadata:
+      name: frontend
+      labels:
+        app: nextjs
+        tier: frontend
+    spec:
+      containers:
+        - name: nextjs-frontend
+          image: arnavneo/nextjs-frontend:1.0
+          ports:
+            - name: http-frontend
+              containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_BACKEND_URL
+              value: http://192.168.49.2:32034/api
+      restartPolicy: Always
+...

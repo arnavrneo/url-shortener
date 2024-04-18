@@ -1,11 +1,13 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+const SECRET = process.env.SECRET;
+
 const requireAuth = (req, res, next) => {
     const token = req.cookies.jwt;
 
     if (token) {
-        jwt.verify(token, process.env.SECRET, (err, decodedToken) => {
+        jwt.verify(token, SECRET, (err, decodedToken) => {
             if (err) {
                 res.status(404).json({"error": "unauthorized"})
             } else {
@@ -23,7 +25,7 @@ export const checkUser = async (req, res, next) => {
     const token = req.cookies.jwt;
 
     if (token) {
-        jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
+        jwt.verify(token, SECRET, async (err, decodedToken) => {
             if (err) {
                 res.locals.user = null;
                 next();

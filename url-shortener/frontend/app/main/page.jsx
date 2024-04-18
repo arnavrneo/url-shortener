@@ -16,7 +16,7 @@ function Main() {
     useEffect(() => {
         (
             async () => {
-                const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/user', {
+                const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/user', {
                     credentials: 'include',
                     headers: {"Content-Type": "application/json"},
                 });
@@ -40,7 +40,7 @@ function Main() {
         formData.append("url", url);
 
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + "/shorten", {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/shorten", {
                 method: "POST",
                 credentials: "include",
                 // headers: {"Content-Type": "application/json"},
@@ -62,7 +62,7 @@ function Main() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + "/logout", {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/logout", {
                 credentials: "include",
                 method: "POST",
             })

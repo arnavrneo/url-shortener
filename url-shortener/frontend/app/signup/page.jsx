@@ -14,7 +14,7 @@ function Signup() {
 
     try {
       console.log("Signup credentials: ", JSON.stringify({ email, password }))
-      const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINT + '/register', {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/register', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

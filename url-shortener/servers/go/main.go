@@ -5,13 +5,10 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"url-shortener/initializers"
 	"url-shortener/routes"
 )
 
 func init() {
-	// load up the .env
-	initializers.LoadEnvVar()
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {

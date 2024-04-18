@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 5678
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "--watch", "index.js" ]

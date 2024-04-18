@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tier: backend
+    app: ejserver
+  name: ejserver-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+      app: ejserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ejserver
+        tier: backend
+    spec:
+      containers:
+        - image: arnavneo/ejserver:1.1
+          name: ejserver
+          ports:
+            - name: http-ejs
+              containerPort: 5678
+          env:
+            - name: PORT
+              value: '5678'
+            - name: REDIS_PORT
+              value: '11430'
+          envFrom:
+            - secretRef:
+                name: ejsenv
+          resources: { }
+status: { }
+...
