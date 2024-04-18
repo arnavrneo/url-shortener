@@ -5,7 +5,7 @@ metadata:
   labels:
     tier: backend
     app: ejserver
-  name: ejserver
+  name: ejserver-deploy
 spec:
   replicas: 1
   selector:
@@ -20,7 +20,7 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: arnavneo/ejserver:2.0
+        - image: arnavneo/ejserver:1.1
           name: ejserver
           ports:
             - name: http-ejs

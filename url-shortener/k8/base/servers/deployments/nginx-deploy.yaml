@@ -20,5 +20,5 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: nginx
+          image: arnavneo/nginx-proxy:1.0
 ...

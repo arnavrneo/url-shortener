@@ -3,8 +3,7 @@ export default function FourOOne() {
         <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-sky-500 to-indigo-500">
             <h1 className="text-5xl font-bold text-white mb-8">Restricted Access</h1>
             <p className="text-lg text-gray-200 mb-8">
-                This page is reserved for authorized personnel only. Please check your
-                credentials or return to the previous page.
+                You are unauthenticated. Login or return to the previous page.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
                 <a

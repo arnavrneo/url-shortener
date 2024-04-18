@@ -2,6 +2,9 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import client from "../rdClient/redisClient.js";
 
+const SECRET = process.env.SECRET;
+const NGINX_ENDPOINT = process.env.NGINX_ENDPOINT;
+
 const handleErrors = (err) => {
     console.log(err.message, err.code);
     let errors = { username: '', email: '', password: ''};
@@ -103,7 +106,7 @@ export async function shorten(req, res) {
         }
     });
 
-    const shortenedUrl = `${process.env.NGINX_ENDPOINT}/api/short/${shortKey}`
+    const shortenedUrl = `${NGINX_ENDPOINT}/api/short/${shortKey}`
 
     res.status(200).json({'shorten_link': shortenedUrl});
 }
@@ -129,7 +132,7 @@ const maxAge = 60 * 60 // in seconds
 const createToken = (email) => {
     return jwt.sign(
         { email },
-        process.env.SECRET,
+        SECRET,
         { expiresIn: maxAge })
 
 }
