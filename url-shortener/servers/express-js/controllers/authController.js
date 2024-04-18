@@ -103,7 +103,7 @@ export async function shorten(req, res) {
         }
     });
 
-    const shortenedUrl = `http://localhost:${process.env.PORT}/api/short/${shortKey}`
+    const shortenedUrl = `${process.env.NGINX_ENDPOINT}/api/short/${shortKey}`
 
     res.status(200).json({'shorten_link': shortenedUrl});
 }

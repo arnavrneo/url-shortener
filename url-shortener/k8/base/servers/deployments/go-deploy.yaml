@@ -4,8 +4,8 @@ kind: Deployment
 metadata:
   labels:
     tier: backend
-    app: goserver
-  name: goserver
+    app: go-dep
+  name: go-dep
 spec:
   replicas: 1
   selector:
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - image: arnavneo/goserver:1.0
-          name: goserver
+          name: go-server-container
           ports:
             - name: http-go
               containerPort: 1234

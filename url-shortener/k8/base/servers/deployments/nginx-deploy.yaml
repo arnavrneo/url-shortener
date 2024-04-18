@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx-deploy
+    tier: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      tier: proxy
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: proxy
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+...

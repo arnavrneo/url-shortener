@@ -20,12 +20,12 @@ spec:
     spec:
       containers:
         - name: nextjs-frontend
-          image: arnavneo/frontend:1.0
+          image: arnavneo/next-frontend:2.0
           ports:
             - name: http-frontend
               containerPort: 3000
           env:
             - name: NEXT_PUBLIC_BACKEND_URL
-              value: http://go-service:1234/api
+              value: http://192.168.58.2:30395/api
       restartPolicy: Always
       

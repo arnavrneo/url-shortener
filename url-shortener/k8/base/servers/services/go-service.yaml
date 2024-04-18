@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: go-service
+  name: go-svc
+  labels:
+    app: go-svc
 spec:
   selector:
     app: goserver
@@ -10,5 +12,5 @@ spec:
     - protocol: TCP
       port: 1234
       targetPort: 1234
-  type: ClusterIP
+  type: LoadBalancer
   

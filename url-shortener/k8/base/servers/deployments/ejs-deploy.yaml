@@ -20,7 +20,7 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: arnavneo/ejserver:1.0
+        - image: arnavneo/ejserver:2.0
           name: ejserver
           ports:
             - name: http-ejs
