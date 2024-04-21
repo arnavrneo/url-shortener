@@ -1,6 +1,6 @@
 # K8 Setup
 
-This directory aims for the container orchestration of frontend, backend server and nginx as the reverse proxy between the formers. The `frontend` and `servers` directories contain the required manifest files for setting up the project on a kubernetes cluster.
+This directory aims for the container orchestration of frontend, backend server and nginx as the reverse proxy between the formers. The `frontend` and `servers` directories contain the required manifest files for setting up the project on a kubernetes cluster (this project was created on minikube).
 
 ## Pre-requisites
 
