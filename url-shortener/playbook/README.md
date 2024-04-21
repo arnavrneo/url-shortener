@@ -11,6 +11,10 @@ Creates a security group & an ubuntu-ami backed EC2 instance using the specified
 
 Updates the machine as well as installs the docker required in the next step for running the application.
 
+
+> [!IMPORTANT]
+> The above two playbooks are now replaced by the `terraform`. Either run the above playbooks or use the provided terraform code for infrastructure setup.
+
 ### `3_docker_book.yaml`
 
 This provides functionalities for setting up the application files, running the application in the docker as well as the ability to remove the containers on the remote servers.
