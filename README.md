@@ -2,6 +2,18 @@
 
 This project aims to implement a decoupled & scalable architecture for url shortener service.
 
+# Showcase
+
+| Login | Signup |
+| ------------- | ------------- |
+| ![login.png](url-shortener/images/login.png)  | ![signup.png](url-shortener/images/signup.png)  |
+
+| Main |
+| -------- |
+| ![main.png](url-shortener/images/main.png) |
+
+
+
 # Architecture
 
 This project uses:
@@ -14,5 +26,3 @@ This project uses:
 - Terraform is used for Infrastructure creation and Ansible playbooks and roles are used for configuring EC2 instances created on AWS providing:
     - Installation of Docker on those instances
     - Running of the url-shortener service through user input
-
-

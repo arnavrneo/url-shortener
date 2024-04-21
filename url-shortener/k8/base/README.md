@@ -1,14 +1,14 @@
 # K8 Setup
 
-`frontend` and `servers` directories contain the required manifest files for setting up the project on a kubernetes cluster.
+This directory aims for the container orchestration of frontend, backend server and nginx as the reverse proxy between the formers. The `frontend` and `servers` directories contain the required manifest files for setting up the project on a kubernetes cluster (this project was created on minikube).
 
 ## Pre-requisites
 
-The specified secrets (env variables) values need to be substituted in the target backend server secrets manifest files under `secrets` directory.
+The specified secrets (env variables) values need to be substituted in the target backend server secrets manifest files under `secrets` directory for the backend to work.
 
 ## Order of setup 
 
-Let's choose expressjs as our backend server (goserver under dev).
+Let's choose expressjs as our backend server.
 
 1) Create all the services under `servers/services/` directory and then proceed forward.
 
