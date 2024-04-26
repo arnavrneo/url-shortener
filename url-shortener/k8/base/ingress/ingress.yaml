@@ -4,10 +4,13 @@ metadata:
   name: frontend-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
 spec:
   ingressClassName: nginx
   rules:
-    - host: url-ly.com # TODO: do we need this in prod?
+    - host: url-ly.com 
       http:
         paths:
           - path: /
